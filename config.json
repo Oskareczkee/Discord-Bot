@@ -1,0 +1,9 @@
+//remember to add copy of this file to the bin/Debug folder
+{
+  "token": "OTQzNjkzOTA2MDgyNjY4NjI1.G0g6gQ.86NB4Nhqvl-xwJyLb7vgzFE4DH5ik2nnrMAl7o",
+  "prefix": "!",
+  "mamonPhotoURL": "https://cdn.discordapp.com/attachments/736704747418943489/951933063955353730/unknown.png",
+  "IDPawla": 539867125704294400,
+  "MemeFolderRoot": "C:\\Users\\Hal9000\\Desktop\\Ciekawe filmiki",
+  "DatabaseConnectionString": "Server=(localdb)\\mssqllocaldb;Database=Context;Trusted_Connection=True;MultipleActiveResultSets=true"
+}

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Core\**" />
+    <Compile Remove="DB\**" />
+    <Compile Remove="packages\**" />
+    <Content Remove="Core\**" />
+    <Content Remove="DB\**" />
+    <Content Remove="packages\**" />
+    <EmbeddedResource Remove="Core\**" />
+    <EmbeddedResource Remove="DB\**" />
+    <EmbeddedResource Remove="packages\**" />
+    <None Remove="Core\**" />
+    <None Remove="DB\**" />
+    <None Remove="packages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DSharpPlus" Version="4.2.0" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0" />
+    <PackageReference Include="DSharpPlus.VoiceNext" Version="4.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Core\Core.csproj" />
+  </ItemGroup>
+
+</Project>
