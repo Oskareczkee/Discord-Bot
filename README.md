@@ -1,6 +1,6 @@
 # Discord-Bot
 An RPG Discord bot created in DSharp library in C# language  
-![Screen of bot in Discord](../Screens/ScreenOne.png)
+![Screen of bot in Discord](/Screens/ScreenOne.png)
 
 ## About Bot
 This bot has been created as a side project for fun. It provides simple commands as well as an RPG system with customisable database written using EF Core.  
@@ -33,8 +33,8 @@ This section will show tutorial how to start using bot and open in localhost
   + *Bot permissions* -> *Administrator*
   + Generate your new URL, add to any server
 - Open .sln file in Visual Studio
-   + *Tools* -> *NuGet Packet Manager* -> *Console* ![How to open nuget console](../Screens/NugetOpenConsole.png)
-   + Change project to DB ![How to change project in console](../Screens/ChangeProject.png)
+   + *Tools* -> *NuGet Packet Manager* -> *Console* ![How to open nuget console](/Screens/NugetOpenConsole.png)
+   + Change project to DB ![How to change project in console](/Screens/ChangeProject.png)
    + Type ``` Update-Database ```
 - Run Bot using Ctrl + F5
    + New window in website will open as well as console - **DO NOT CLOSE THEM**
