@@ -44,4 +44,4 @@ This section will show tutorial how to start using bot and open in localhost
 This was the most basic setup, if this project will get noticed by anyone, who would like to use it I will write more about maintaining bot and its commands
 
 ## Bug reports
-I will be very glad if you spot any bug, you can add issues on github, I try to fix every bug i find. And the most important  - **Thank for your contribution**
+I will be very glad if you spot any bug, you can add issues on github, I try to fix every bug i find. And the most important  - **Thanks for your contribution**
