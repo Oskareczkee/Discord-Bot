@@ -34,7 +34,8 @@ This section will show tutorial how to start using bot and open in localhost
   + Generate your new URL, add to any server
 - Open .sln file in Visual Studio
    + *Tools* -> *NuGet Packet Manager* -> *Console* ![How to open nuget console](/Screens/NugetOpenConsole.png)
-   + Change project to DB ![How to change project in console](/Screens/ChangeProject.png)
+   + Change project to DB  
+     ![How to change project in console](/Screens/ChangeProject.png)
    + Type ``` Update-Database ```
 - Run Bot using Ctrl + F5
    + New window in website will open as well as console - **DO NOT CLOSE THEM**
