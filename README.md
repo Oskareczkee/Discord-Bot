@@ -3,7 +3,7 @@ An RPG Discord bot created in DSharp library in C# language
 ![Screen of bot in Discord](/Screens/ScreenOne.png)
 
 ## About Bot
-This bot has been created as a side project for fun. It provides simple commands as well as an RPG system with customisable database written using EF Core.  
+This bot has been created as a side project for fun. It uses DSharp version 4.2.0 so it does not provieds slash commands yet. It provides simple commands as well as an RPG system with customisable database written using EF Core.  
 Every user can add new items, mobs and lore to create his own unique RPG world.
 
 ## Bugs
@@ -12,6 +12,7 @@ possible
 
 ## Future Development
 There are few things planned to be added in the future
+- Updating to the newest DSharp library and changing commands to slash commands
 - Talking with bot via Chat GPT
 - Writing Web UI to improve admin experience and make database managment easier (now commands are used to maintain database)
 - Adding music player 
