@@ -4,6 +4,7 @@ using DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230611144005_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,9 +334,6 @@ namespace DB.Migrations
                     b.Property<int>("Armor")
                         .HasColumnType("int");
 
-                    b.Property<int>("BaseDMG")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -342,9 +342,6 @@ namespace DB.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("GoldAward")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HP")
                         .HasColumnType("int");
 
                     b.Property<int>("Intelligence")
@@ -388,9 +385,6 @@ namespace DB.Migrations
                     b.Property<int>("Armor")
                         .HasColumnType("int");
 
-                    b.Property<int>("BaseDMG")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("DiscordID")
                         .HasColumnType("decimal(20,0)");
 
@@ -402,9 +396,6 @@ namespace DB.Migrations
 
                     b.Property<decimal>("GuildID")
                         .HasColumnType("decimal(20,0)");
-
-                    b.Property<int>("HP")
-                        .HasColumnType("int");
 
                     b.Property<int>("Intelligence")
                         .HasColumnType("int");

@@ -18,6 +18,5 @@ namespace Bot
 
         [JsonProperty("MemeFolderRoot")]
         public string MemeFolderRoot { get; private set; }
-
     }
 }

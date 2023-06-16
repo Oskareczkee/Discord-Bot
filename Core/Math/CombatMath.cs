@@ -111,7 +111,7 @@ namespace Core.Math
 
         public static int CalculateDamage(int attackerStrength, int attackerWeaponDMG, double attackerDamageMultiplier, double defenderResistance = 0, double DamageModifier = 0)
         {
-            int Damage = (int)(System.Math.Ceiling(attackerDamageMultiplier * attackerWeaponDMG) * (1 + DamageModifier));
+            int Damage = (int)(System.Math.Ceiling(attackerDamageMultiplier * attackerWeaponDMG) * (1 + DamageModifier) + attackerStrength*1.5);
             return (int)(Damage * (1 - defenderResistance));
 
         }

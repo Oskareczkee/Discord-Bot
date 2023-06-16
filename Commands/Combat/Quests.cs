@@ -25,7 +25,7 @@ namespace Bot.Commands.Combat
             int mobLevel = BotMath.RandomNumberGenerator.Next(Profile.Level, Profile.Level + 1);
             Mob = _mobService.ScaleMob(Mob, mobLevel);
 
-            CombatProfileAndDamage defender = new CombatProfileAndDamage { profile = Mob, Name = Mob.Name, isMob = true };
+            CombatProfileAndDamage defender = new() { profile = Mob, Name = Mob.Name, isMob = true };
 
             await ctx.Channel.SendMessageAsync($"{defender.Name} is staring at {attacker.Name}! Treasure won't come as easy as you thought...");
 
@@ -35,7 +35,7 @@ namespace Bot.Commands.Combat
             //since hp is readonly we have to store amount of damage dealt and compare it to the duelers HPs
             while (true)
             {
-                combatInfo = _combatService.Attack(attacker, defender);
+                  combatInfo = _combatService.Attack(attacker, defender);
                 switch (combatInfo.attackType)
                 {
                     case AttackType.Dodge:

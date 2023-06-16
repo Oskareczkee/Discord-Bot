@@ -4,6 +4,7 @@ using Core.Services.Combat;
 using Core.Services.Items;
 using Core.Services.Mobs;
 using Core.Services.Profiles;
+using DB.Models;
 using DB.Models.Items;
 using DB.Models.Profiles;
 using DSharpPlus.CommandsNext;

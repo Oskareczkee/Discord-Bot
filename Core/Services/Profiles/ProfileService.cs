@@ -209,7 +209,7 @@ namespace Core.Services.Profiles
             using var _context = new Context(_options);
             Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
 
-            Dictionary<Modifiers, double> output = new();
+            Dictionary<Modifiers, double> output = new ();
 
             foreach(var item in profile.Equipment)
             {
@@ -239,12 +239,15 @@ namespace Core.Services.Profiles
             Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
             EquipmentStats eqStats = await GetEquipmentStats(discordID, guildID).ConfigureAwait(false);
 
+
             profile.Strength += eqStats.Strength;
             profile.Agility += eqStats.Agility;
             profile.Intelligence += eqStats.Intelligence;
             profile.Endurance += eqStats.Endurance;
             profile.Luck += eqStats.Luck;
             profile.Armor += eqStats.Armor;
+            profile.HP = profile.Endurance * 2 * (profile.Level + 1);
+            profile.BaseDMG = profile.Level * 2;
 
             return profile;
         }

@@ -1,4 +1,5 @@
-﻿using Core.Services.Combat;
+﻿using Core.Services.AI;
+using Core.Services.Combat;
 using Core.Services.Items;
 using Core.Services.Mobs;
 using Core.Services.Profiles;
@@ -23,6 +24,7 @@ namespace Bot
             services.AddScoped<ICombatService, CombatService>();
             services.AddScoped<IMobService, MobService>();
             services.AddScoped<IItemShopService, ItemShopService>();
+            services.AddScoped<IAIService, AIService>();
 #if DATABASE_CLEAR
             services.AddScoped<IDataBaseClearService, DataBaseClearService>();
 #endif

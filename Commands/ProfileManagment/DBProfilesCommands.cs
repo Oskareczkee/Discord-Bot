@@ -36,7 +36,7 @@ namespace Bot.Commands.ProfileManagment
         private async Task DisplayProfileAsync(CommandContext ctx, ulong memberID)
         {
 
-            Profile profile = await _profileService.GetOrCreateProfileAsync(memberID, ctx.Guild.Id).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileWithEquipmentStats(memberID, ctx.Guild.Id).ConfigureAwait(false);
 
             DiscordMember member = ctx.Guild.Members[profile.DiscordID];
 
@@ -55,13 +55,13 @@ namespace Bot.Commands.ProfileManagment
             profileEmbed.AddField("Next Level:", profile.NextLevel.ToString(), true);
             profileEmbed.AddField("Gold:", profile.Gold.ToString());
             profileEmbed.AddField("HP:", profile.HP.ToString());
-            profileEmbed.AddField("Strength: ", (profile.Strength + eqStats.Strength).ToString() + " Eq(" + eqStats.Strength + ")", true);
-            profileEmbed.AddField("Agility: ", (profile.Agility + eqStats.Agility).ToString() + " Eq(" + eqStats.Agility + ")", true);
-            profileEmbed.AddField("Intelligence: ", (profile.Intelligence + eqStats.Intelligence).ToString() + " Eq(" + eqStats.Intelligence + ")", true);
-            profileEmbed.AddField("Endurance: ", (profile.Endurance + eqStats.Endurance).ToString() + " Eq(" + eqStats.Endurance + ")", true);
-            profileEmbed.AddField("Luck: ", (profile.Luck + eqStats.Luck).ToString() + " Eq(" + eqStats.Luck + ")", true);
+            profileEmbed.AddField("Strength: ", (profile.Strength).ToString() + " Eq(" + eqStats.Strength + ")", true);
+            profileEmbed.AddField("Agility: ", (profile.Agility).ToString() + " Eq(" + eqStats.Agility + ")", true);
+            profileEmbed.AddField("Intelligence: ", (profile.Intelligence).ToString() + " Eq(" + eqStats.Intelligence + ")", true);
+            profileEmbed.AddField("Endurance: ", (profile.Endurance).ToString() + " Eq(" + eqStats.Endurance + ")", true);
+            profileEmbed.AddField("Luck: ", (profile.Luck).ToString() + " Eq(" + eqStats.Luck + ")", true);
             //basically armor can come only from equipment
-            profileEmbed.AddField("Armor:", (profile.Armor + eqStats.Armor).ToString() + " Eq(" + eqStats.Armor + ")", true);
+            profileEmbed.AddField("Armor:", (profile.Armor).ToString() + " Eq(" + eqStats.Armor + ")", true);
 
             if (profile.Items.Count > 0)
                 profileEmbed.AddField("Items:", string.Join(", ", profile.Items.Select(x => x.Name)));

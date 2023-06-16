@@ -4,6 +4,7 @@ using Core.Math;
 using DB.Models.Profiles;
 using DB.Models;
 using DB.Models.Items.Enums;
+using DB.Models.Mobs;
 
 namespace Core.Services.Combat
 {
@@ -28,7 +29,7 @@ namespace Core.Services.Combat
     {
         //profile and mob is set to null to set them manually
         //this allows use of this class in quest without much more added code
-        public Entity profile { get; set; } = null;
+        public Entity profile { get; set; }
         public string Name { get; set; } = string.Empty;
         public int DamageTaken { get; set; } = 0;
         public ulong DiscordID { get; set; } = 0;
@@ -64,7 +65,8 @@ namespace Core.Services.Combat
             bool magick = false;
 
             double attackerDamageMultiplier = BotMath.RandomNumberGenerator.NextDouble()+0.5;
-            double defenderDodgeChance = BotMath.CalculateDodgeChance(Defender.profile.Agility, Attacker.profile.Strength, Attacker.modifiers[Modifiers.DodgeChance]);
+            double defenderDodgeChance = BotMath.CalculateDodgeChance(Defender.profile.Agility, Attacker.profile.Strength, 
+                                        Attacker.modifiers.GetValueOrDefault(Modifiers.DodgeChance));
 
             if(BotMath.Roll(defenderDodgeChance))
             {
@@ -74,25 +76,28 @@ namespace Core.Services.Combat
 
             //if not dodged FIGHT
             //roll critical attack
-            double criticalHitChance = BotMath.CalculateCritChance(Attacker.profile.Luck, Defender.profile.Level, Attacker.modifiers[Modifiers.CriticalAttackChance]);
+            double criticalHitChance = BotMath.CalculateCritChance(Attacker.profile.Luck, Defender.profile.Level, 
+                                       Attacker.modifiers.GetValueOrDefault(Modifiers.CriticalAttackChance));
 
             if (BotMath.Roll(criticalHitChance))
             {
-                attackerDamageMultiplier *= 2*(1 + Attacker.modifiers[Modifiers.CriticalDamage]);
+                attackerDamageMultiplier *= 2*(1 + Attacker.modifiers.GetValueOrDefault(Modifiers.CriticalDamage));
                 criticalHit = true;
             }
 
-            double magickAttackChance = BotMath.CalculateMagickChance(Attacker.profile.Luck, Attacker.profile.Intelligence, Attacker.modifiers[Modifiers.MagicAttackChance]);
+            double magickAttackChance = BotMath.CalculateMagickChance(Attacker.profile.Luck, Attacker.profile.Intelligence, 
+                                        Attacker.modifiers.GetValueOrDefault(Modifiers.MagicAttackChance));
             if(BotMath.Roll(magickAttackChance))
             {
-                attackerDamageMultiplier *= BotMath.CalculateMagickAttackBonus(Attacker.profile.Level, Defender.profile.Intelligence, Attacker.modifiers[Modifiers.MagicDamage]);
+                attackerDamageMultiplier *= BotMath.CalculateMagickAttackBonus(Attacker.profile.Level, Defender.profile.Intelligence, 
+                                            Attacker.modifiers.GetValueOrDefault(Modifiers.MagicDamage));
                 magick = true;
             }
 
             double resistance = 0;
             //mobs dont have armor but overall resistance
             if (Defender.isMob)
-                resistance = Defender.profile.Armor / 100;
+                resistance = ((Mob)Defender.profile).Resistance / 100;
             else
                 resistance = BotMath.CalculateDamageResistance(Defender.profile.Level, Defender.profile.Armor);
 
@@ -116,7 +121,8 @@ namespace Core.Services.Combat
                     break;
             }
 
-            int Damage = BotMath.CalculateDamage(Attacker.profile.Strength, weaponDMG, attackerDamageMultiplier, resistance, Attacker.modifiers[Modifiers.Damage]);
+            int Damage = BotMath.CalculateDamage(Attacker.profile.Strength, weaponDMG, attackerDamageMultiplier, resistance, 
+                         Attacker.modifiers.GetValueOrDefault(Modifiers.Damage));
             outputInfo.Damage = Damage;
 
             if (criticalHit && magick)
@@ -127,6 +133,7 @@ namespace Core.Services.Combat
                 outputInfo.attackType = AttackType.Magic;
             else
                 outputInfo.attackType = AttackType.Attack;
+
 
             return outputInfo;
         }

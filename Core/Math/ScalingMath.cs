@@ -47,9 +47,10 @@ namespace Core.Math
 
             mob.XPAward *= (int)(1.1 * level);
             mob.GoldAward *= (int)(1.2 * level);
-
             mob.Level = level;
 
+            mob.HP = mob.Endurance *(level + 1) + mob.HP * (level+1)/2;
+            mob.BaseDMG = level;
             return mob;
         }
     }

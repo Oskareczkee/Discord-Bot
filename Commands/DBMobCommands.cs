@@ -20,8 +20,7 @@ namespace Bot.Commands
 
 
         [Command("addmob")]
-        [RequireRoles(RoleCheckMode.Any, "catboys paradise")]
-        //[RequireOwner]
+        [RequireOwner]
         public async Task AddMob(CommandContext ctx)
         {
             Mob mob = new Mob();
@@ -46,7 +45,7 @@ namespace Bot.Commands
             mobStatsStep.OnValidResult += (result) => statsString = result;
             mobGoldStep.OnValidResult += (result) => mob.GoldAward = result;
             mobXPStep.OnValidResult += (result) => mob.XPAward = result;
-            mobResistanceStep.OnValidResult += (result) => mob.Armor = result;
+            mobResistanceStep.OnValidResult += (result) => mob.Resistance = result;
 
             var inputDialogueHandler = new DialogueHandler(
                 ctx.Client,
@@ -90,8 +89,8 @@ namespace Bot.Commands
             mob.Intelligence = StatsInt[2];
             mob.Endurance = StatsInt[3];
             mob.Luck = StatsInt[4];
-            //mob.HP = StatsInt[5];
-            //mob.BaseDMG = StatsInt[6];
+            mob.HP = StatsInt[5];
+            mob.BaseDMG = StatsInt[6];
 
 
             await _mobService.CreateMob(mob);

@@ -16,11 +16,11 @@ namespace DB.Models.Profiles
 
     public class Profile : Entity
     {
-        public new int Strength { get; set; } = 10;
-        public new int Agility { get; set; } = 10;
-        public new int Intelligence { get; set; } = 10;
-        public new int Endurance { get; set; } = 10;
-        public new int Luck { get; set; } = 10;
+        public override int Strength { get; set; } = 10;
+        public override int Agility { get; set; } = 10;
+        public override int Intelligence { get; set; } = 10;
+        public override int Endurance { get; set; } = 10;
+        public override int Luck { get; set; } = 10;
 
         public ulong DiscordID { get; set; }
         public ulong GuildID { get; set; }

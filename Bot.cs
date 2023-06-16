@@ -51,7 +51,7 @@ namespace Bot
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                MinimumLogLevel = LogLevel.Debug,
+                MinimumLogLevel = LogLevel.Debug
             };
 
             Configuration = new BotConfig
@@ -118,6 +118,9 @@ namespace Bot
 
             //mobs
             Commands.RegisterCommands<DBMobCommands>();
+
+            //ai commands
+            Commands.RegisterCommands<AICommands>();
 #if DATABASE_CLEAR
             Commands.RegisterCommands<ClearDatabase>();
 #endif
