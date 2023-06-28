@@ -1,0 +1,60 @@
+﻿@{
+    string controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    string action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Discord Bot</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/modal-window.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/Web_UI.styles.css" asp-append-version="true" />
+</head>
+<body class="bg-black text-light background-fantasy">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark navbar-bg box-shadow px-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img  src="~/img/discord-logo.svg" width="40" height="40"/>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link @(controller=="Home" ? "active" : "")"
+                            asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(controller=="Database" ? "active" : "")"
+                               asp-controller="Database" asp-action="Items">Database</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="min-vh-100">
+        @RenderBody()
+    </div>
+    <footer class="border-top footer text-muted pt-3 pb-3 bg-transparent">
+        <div class="container-fluid text-center">
+            &copy; @DateTime.Now.Year Discord Bot 
+            <a class="link-light text-decoration-none" asp-area="" asp-controller="Home" asp-action="Credits">Credits</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/helpers.js"></script>
+    <script src="~/js/modal-window.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

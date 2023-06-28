@@ -1,0 +1,75 @@
+﻿@using DB.Models.Mobs;
+@model DatabaseViewModel<Mob>
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Title"] = "Database manager";
+}
+
+@section Filters{
+
+}
+
+@section AddNewBtn{
+    <a class="btn btn-fantasy btn-fantasy-md"
+       onclick="new ModalWindow('@Url.Action("AddMobPartialView", "Database", new Mob())').open()">
+        Add New Mob
+    </a>
+}
+
+@section Content{
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Gold</th>
+            <th>XP</th>
+            <th>DMG</th>
+            <th>Strength</th>
+            <th>Agility</th>
+            <th>Intelligence</th>
+            <th>Endurance</th>
+            <th>Luck</th>
+            <th>Resistance</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Mob mob in Model.Entities)
+        {
+            double Resistance = mob.Resistance / 100.0; <!--Convert resistance to percents-->
+            <tr>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Name</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.GoldAward</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.XPAward</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.BaseDMG</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Strength.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Agility.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Intelligence.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Endurance.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Luck.ToString()</td>
+
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@Resistance.ToString("P")</td>
+                <td><a class="link-success text-decoration-none"
+                       onclick="new ModalWindow('@Url.Action("AddMobPartialView", "Database", mob)').open()">Update</a>
+                </td>
+                <td><a class="link-danger text-decoration-none"
+                       onclick="new ModalWindow('@Url.Action("DeletePartialView", "Database", new DeleteViewModel{Name = mob.Name, ID = mob.ID, Type = "Mob"})').open()">Delete</a>
+                </td>
+            </tr>
+
+            <!--Details panel-->
+            <tr class="hide-table-padding hover-disable">
+                <td colspan="11">
+                    <div class="container-fluid row collapse py-1" id="ID_@mob.ID" data-bs-parent=".table">
+                        <div class="col-4">
+                            <div>
+                                <strong>Description</strong>
+                                <div>@mob.Description</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+}

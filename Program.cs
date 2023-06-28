@@ -6,15 +6,13 @@ namespace Bot
     {
         static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var builder = WebApplication.CreateBuilder(args);
+            Startup.ConfigureServices(builder.Services);
+            var app = builder.Build();
+
+            app.Run();
+
             Task.Delay(-1);
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
     }
 }

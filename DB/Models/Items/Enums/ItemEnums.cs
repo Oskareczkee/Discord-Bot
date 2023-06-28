@@ -8,7 +8,6 @@ namespace DB.Models.Items.Enums
 {
     public enum ItemType
     {
-        None = 0,
         Helmet = 1,
         Chestplate = 2,
         Gloves = 3,
@@ -32,7 +31,6 @@ namespace DB.Models.Items.Enums
 
     public enum Modifiers
     {
-        None = 0,
         MeleeDamage = 1,
         MagicDamage = 2,
         MagicAttackChance = 3,

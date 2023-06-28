@@ -113,7 +113,7 @@ namespace Bot.Commands
         [Description("Pokazuje rozmiar twojego huja")]
 
         public async Task Huj(CommandContext ctx,
-               [Description("(Opcjonalny) Wzmianka do użytkownika")] DiscordMember mention = null)
+               [Description("(Opcjonalny) Wzmianka do użytkownika")] DiscordMember? mention = null)
         {
             //set seed, seed changes every hour
             Random r;

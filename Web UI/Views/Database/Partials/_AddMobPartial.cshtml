@@ -1,0 +1,83 @@
+﻿@using DB.Models.Mobs;
+@model Mob
+@{
+    TempData["Operation"] = Model.Name == string.Empty ? "Add" : "Update";
+}
+
+<div class="p-2 me-3">
+    <!--
+        Validation is not used, instead we take errors if there are any, and display them after refresh
+        Displaying errors in modal error is pretty hard
+        <div asp-validation-summary="All" class="text-danger"></div>
+    -->
+
+    <h5>@TempData["Operation"] mob <strong class="text-warning">@Model.Name</strong></h5>
+    <form method="post" asp-action="AddMob">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input required asp-for="Name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <input required asp-for="Description" class="form-control" />
+        </div>
+
+        <div class="mb-3 row">
+            <div class="col-md-3 mt-2">
+                <label asp-for="GoldAward" class="form-label"></label>
+                <input type="number" min="0" asp-for="GoldAward" class="form-control" />
+            </div>
+
+            <div class="col-md-3 mt-2">
+                <label asp-for="XPAward" class="form-label"></label>
+                <input type="number" min="0" asp-for="XPAward" class="form-control" />
+            </div>
+
+           <div class="col-md-3 mt-2">
+                <label asp-for="HP" class="form-label"></label>
+                <input type="number" min="1" asp-for="HP" class="form-control" />
+            </div>
+
+            <div class="col-md-3 mt-2">
+                <label asp-for="BaseDMG" class="form-label"></label>
+                <input type="number" min="1" asp-for="BaseDMG" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3 row" id="Stats">
+            <div class="col-md-2 mt-2">
+                <label asp-for="Strength" class="form-label"></label>
+                <input type="number" min="0" asp-for="Strength" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Agility" class="form-label"></label>
+                <input type="number" min="0" asp-for="Agility" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Intelligence" class="form-label"></label>
+                <input type="number" min="0" asp-for="Intelligence" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Endurance" class="form-label"></label>
+                <input type="number" min="0" asp-for="Endurance" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Luck" class="form-label"></label>
+                <input type="number" min="0" asp-for="Luck" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Resistance" class="form-label"></label>
+                <input type="number" min="0" asp-for="Resistance" class="form-control" />
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="ID" />
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-fantasy btn-fantasy-md">@TempData["Operation"]</button>
+            <a class="btn btn-fantasy btn-fantasy-md modal-close">Cancel</a>
+        </div>
+
+    </form>
+</div>

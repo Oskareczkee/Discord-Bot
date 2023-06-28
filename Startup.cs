@@ -10,7 +10,7 @@ namespace Bot
 {
     public class Startup
     {
-        public void ConfigureServices(IServiceCollection services)
+        static public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>(options =>
             {
@@ -36,9 +36,8 @@ namespace Bot
             services.AddSingleton(bot);
         }
 
-        public void Configure(IApplicationBuilder builder, IWebHostEnvironment env)
+        static public void ConfigureApp(WebApplication app)
         {
-
         }
     }
 }

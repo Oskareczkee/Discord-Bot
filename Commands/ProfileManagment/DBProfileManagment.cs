@@ -94,7 +94,7 @@ namespace Bot.Commands.ProfileManagment
         {
             Profile profile = await _profileService.GetOrCreateProfileAsync(ctx.Member!.Id, ctx.Guild.Id);
 
-            ItemType itemType = ItemType.None;
+            ItemType itemType = ItemType.Miscellaneous;
 
             var itemTypeStep = new IntStep(
             @"What item do you want to change:
@@ -189,7 +189,7 @@ namespace Bot.Commands.ProfileManagment
         {
             Profile profile = await _profileService.GetOrCreateProfileAsync(ctx.Member!.Id, ctx.Guild.Id);
 
-            ItemType itemType = ItemType.None;
+            ItemType itemType = ItemType.Miscellaneous;
 
             var itemTypeStep = new IntStep(
             @"What item do you want to unequip:

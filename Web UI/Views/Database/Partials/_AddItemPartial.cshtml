@@ -1,0 +1,126 @@
+﻿@using DB.Models.Items;
+@using DB.Models.Items.Enums;
+@model AddItemViewModel
+@{
+    TempData["Operation"] = Model.Item.Name == string.Empty ? "Add" : "Update";
+}
+
+<div class="p-2 me-3">
+    <!--
+        Validation is not used, instead we take errors if there are any, and display them after refresh
+        Displaying errors in modal error is pretty hard
+        <div asp-validation-summary="All" class="text-danger"></div>
+    -->
+
+    <h5>@TempData["Operation"] item <strong class="text-warning">@Model.Item.Name</strong></h5>
+    <form method="post" asp-action="AddItem">
+        <div class="mb-3">
+            <label asp-for="Item.Name" class="form-label"></label>
+            <input required asp-for="Item.Name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Item.Description" class="form-label"></label>
+            <input required asp-for="Item.Description" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Item.Price" class="form-label"></label>
+            <input type="number" min="0" asp-for="Item.Price" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Item.Type" class="form-label"></label>
+            <select asp-for="Item.Type" class="form-select" id="SelectType"
+                    asp-items="@Html.GetEnumSelectList<ItemType>()">
+            </select>
+        </div>
+
+        <div class="mb-3 row @(Model.Item.Type==ItemType.Weapon ? "" : "d-none")" id="WeaponDamage">
+            <div class="col-md-6 mt-2">
+                <label asp-for="Item.MinDamage" class="form-label"></label>
+                <input type="number" min="0" asp-for="Item.MinDamage" class="form-control" />
+            </div>
+            <div class="col-md-6 mt-2">
+                <label asp-for="Item.MaxDamage" class="form-label"></label>
+                <input type="number" min="0" asp-for="Item.MaxDamage" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3 row @(Model.Item.Type==ItemType.Miscellaneous || Model.Item.Type==ItemType.Potion ? "d-none" : "")" id="Stats">
+            <div class="col-md-2 mt-2">
+                <label asp-for="Item.Strength" class="form-label"></label>
+                <input asp-for="Item.Strength" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Item.Agility" class="form-label"></label>
+                <input asp-for="Item.Agility" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Item.Intelligence" class="form-label"></label>
+                <input asp-for="Item.Intelligence" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Item.Endurance" class="form-label"></label>
+                <input asp-for="Item.Endurance" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Item.Luck" class="form-label"></label>
+                <input asp-for="Item.Luck" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-2">
+                <label asp-for="Item.Armor" class="form-label"></label>
+                <input asp-for="Item.Armor" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3 @(Model.Item.Type==ItemType.Potion ? "" : "d-none")" id="Modifiers">
+            <div class=" row-cols-12 w-100 btn btn-fantasy btn-fantasy-md"
+                 onclick="AddPartialContent
+                        ('@Url.Action("AddModifierPartialView","Database",1)', '#Modifiers')">
+                Add new Modifier
+            </div>
+
+            @{
+                foreach (var modifier in Modifier.GetModifiersFromString(Model.Item.Modifiers))
+                {
+                    <div class="row modifier-row">
+                        <div class="col-md-6 mt-2">
+                            @{
+                                var modifiersList = new List<SelectListItem>();
+                                foreach (var mod in Enum.GetValues<Modifiers>())
+                                    modifiersList.Add(new SelectListItem { Text = Enum.GetName<Modifiers>(mod), Value = ((int)mod).ToString()});
+
+                                modifiersList.Single(mod => ((int)(modifier.modifier)).ToString() == mod.Value).Selected = true;
+                                <label class="form-label">Modifier</label>
+                                <select name="Modifiers" class="form-select" name="Modifiers"
+                                        asp-items=modifiersList>
+                                </select>
+                            }
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="form-label">Bonus %</label>
+                            <span class="d-flex gap-3">
+                                <input required type="number" min="1" class="form-control" name="Modifiers" value="@modifier.BonusPercent" />
+                                <a class="btn btn-danger row-delete-btn">
+                                    Remove
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <input type="hidden" asp-for="Item.ID" />
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-fantasy btn-fantasy-md">@TempData["Operation"]</button>
+            <a class="btn btn-fantasy btn-fantasy-md modal-close">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+<!--Add necessary scripts-->
+<script src="~/js/item-add.js"></script>

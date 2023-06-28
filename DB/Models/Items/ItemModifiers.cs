@@ -7,7 +7,7 @@ namespace DB.Models.Items
 {
     public class Modifier
     {
-        public Modifiers modifier { get; set; } = Modifiers.None;
+        public Modifiers modifier { get; set; }
         public int BonusPercent { get; set; } = 0;
 
         public Modifier(Modifiers Modifier, int Value)
@@ -20,14 +20,13 @@ namespace DB.Models.Items
         {
             return modifier switch
             {
-                Modifiers.None => string.Empty,
                 Modifiers.MeleeDamage => "Melee Damage: ",
                 Modifiers.MagicDamage => "Magic Damage: ",
                 Modifiers.MagicAttackChance => "Magic Attack Chance: ",
                 Modifiers.CriticalAttackChance => "Critical Attack Chance: ",
                 Modifiers.CriticalDamage => "Critical Damage: ",
-                Modifiers.DodgeChance => "Dodge Chance",
-                Modifiers.Damage => "Damage",
+                Modifiers.DodgeChance => "Dodge Chance: ",
+                Modifiers.Damage => "Damage: ",
                 _ => string.Empty,
             };
         }

@@ -1,0 +1,96 @@
+﻿@using DB.Models.Items
+@using DB.Models.Items.Enums;
+@model DatabaseViewModel<ItemBase>
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Title"] = "Database manager";
+}
+
+@section Filters{
+}
+
+@section AddNewBtn{
+    <a class="btn btn-fantasy btn-fantasy-md"
+       onclick="new ModalWindow('@Url.Action("AddItemPartialView", "Database", new ItemBase())').open()">
+        Add New Item
+    </a>
+}
+
+@section Content{
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Price</th>
+                <th>Strength</th>
+                <th>Agility</th>
+                <th>Intelligence</th>
+                <th>Endurance</th>
+                <th>Luck</th>
+                <th>Armor</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ItemBase item in Model.Entities)
+            {
+            <tr>
+                <!--Couldn't find better solution to disable collapse toggle in update and delete btns-->
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Name</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Type</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Price.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Strength.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Agility.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Intelligence.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Endurance.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Luck.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@item.ID">@item.Armor.ToString()</td>
+                <td><a class="link-success text-decoration-none"
+                    onclick="new ModalWindow('@Url.Action("AddItemPartialView", "Database", item)').open()">Update</a></td>
+                <td><a class="link-danger text-decoration-none" 
+                    onclick="new ModalWindow('@Url.Action("DeletePartialView", "Database", new DeleteViewModel{Name = item.Name, ID = item.ID, Type= "Item"})').open()">Delete</a></td>
+            </tr>
+
+            <!--Details panel-->
+            <tr class="hide-table-padding hover-disable">
+                <td colspan="11">
+                    <div class="container-fluid row collapse py-1" id="ID_@item.ID" data-bs-parent=".table">
+                        <div class="col-4">
+                            <div>
+                                <strong>Description</strong>
+                                <div>@item.Description</div>
+                            </div>
+                        </div>
+                        @if(item.Type==ItemType.Weapon)
+                        {
+                            <div class="col-1">
+                                <strong>Damage </strong>
+                                <div>
+                                    Min Damage: @item.MinDamage
+                                </div>
+                                <div>
+                                    Max Damage: @item.MaxDamage
+                                </div>
+                            </div>
+                        }
+                        @if(item.Type==ItemType.Potion)
+                        {
+                            var modifiers = Modifier.GetModifiersFromString(item.Modifiers);
+                            <div class="col-1">
+                                <strong>Modifiers</strong>
+                                @foreach(var mod in modifiers)
+                                {
+                                    <div>
+                                        @mod
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            
+            }
+        </tbody>
+}

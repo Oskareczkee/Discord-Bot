@@ -1,6 +1,6 @@
 //remember to add copy of this file to the bin/Debug folder
 {
-  "token": "Add your discord bot token here",
+  "token": "Put your Discord Bot token here",
   "prefix": "!",
   "mamonPhotoURL": "https://cdn.discordapp.com/attachments/736704747418943489/951933063955353730/unknown.png",
   "IDPawla": 539867125704294400,

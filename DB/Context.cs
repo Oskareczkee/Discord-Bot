@@ -10,15 +10,15 @@ namespace DB
     public class Context : DbContext
     {
         public Context(DbContextOptions<Context> options) : base(options) { }
-        public DbSet<Profile> Profiles { get; set; }
-        public DbSet<ItemBase> Items { get; set; }
-        public DbSet<ProfileItem> ProfileItems { get; set; }
-        public DbSet<EquipmentItem> ProfileEquipments { get; set; }
-        public DbSet<ShopItem> ProfileShops { get; set; }
-        public DbSet<Mob> Mobs { get; set; }
-        public DbSet<WeaponTypeDB> WeaponTypes { get; set; }
-        public DbSet<ItemTypeDB> ItemTypes { get; set; }
-        public DbSet<ModifiersDB> ItemModifiers { get; set; }
+        public DbSet<Profile> Profiles { get; set; } = null!;
+        public DbSet<ItemBase> Items { get; set; } = null!;
+        public DbSet<ProfileItem> ProfileItems { get; set; } = null!;
+        public DbSet<EquipmentItem> ProfileEquipments { get; set; } = null!;
+        public DbSet<ShopItem> ProfileShops { get; set; } = null!;
+        public DbSet<Mob> Mobs { get; set; } = null!;
+        public DbSet<WeaponTypeDB> WeaponTypes { get; set; } = null!;
+        public DbSet<ItemTypeDB> ItemTypes { get; set; } = null!;
+        public DbSet<ModifiersDB> ItemModifiers { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Item>().UseTptMappingStrategy();

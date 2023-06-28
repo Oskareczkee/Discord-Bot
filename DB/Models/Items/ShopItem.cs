@@ -14,7 +14,7 @@ namespace DB.Models.Items
             Name = "None";
             Description = "None";
             Price = 0;
-            Type = ItemType.None;
+            Type = ItemType.Miscellaneous;
             ID = 0;
         }
 

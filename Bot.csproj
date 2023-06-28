@@ -10,15 +10,19 @@
     <Compile Remove="Core\**" />
     <Compile Remove="DB\**" />
     <Compile Remove="packages\**" />
+    <Compile Remove="Web UI\**" />
     <Content Remove="Core\**" />
     <Content Remove="DB\**" />
     <Content Remove="packages\**" />
+    <Content Remove="Web UI\**" />
     <EmbeddedResource Remove="Core\**" />
     <EmbeddedResource Remove="DB\**" />
     <EmbeddedResource Remove="packages\**" />
+    <EmbeddedResource Remove="Web UI\**" />
     <None Remove="Core\**" />
     <None Remove="DB\**" />
     <None Remove="packages\**" />
+    <None Remove="Web UI\**" />
   </ItemGroup>
 
   <ItemGroup>

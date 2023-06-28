@@ -21,7 +21,7 @@ namespace DB.Models.Items
             Name = "None";
             Description = "None";
             Price = 0;
-            Type = ItemType.None;
+            Type = ItemType.Miscellaneous;
         }
 
         //constructor for profile service to add equipment
@@ -124,7 +124,7 @@ namespace DB.Models.Items
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public double Price { get; set; } = 0;
-        public ItemType Type { get; set; } = ItemType.None;
+        public ItemType Type { get; set; } = ItemType.Miscellaneous;
 
         public WeaponType WeaponType { get; set; } = WeaponType.None;
         public int MinDamage { get; set; } = 0;

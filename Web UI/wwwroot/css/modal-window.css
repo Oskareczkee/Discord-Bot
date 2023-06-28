@@ -1,0 +1,72 @@
+﻿.modal-background {
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index:999;
+}
+
+.modal-content{
+    position: relative;
+    border: 2px solid white;
+    background-color: rgba(0, 0, 0,0.5);
+    align-self: center;
+    justify-self: center;
+ 
+    width: fit-content;
+    max-width: 75vw;
+    max-height: 75vh;
+}
+
+/*Hide scrollbar for Chrome, Safari, Opera*/
+.modal-hide-scroll::-webkit-scrollbar{
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.modal-hide-scroll{
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.modal-close-btn {
+    border: 2px solid white;
+    background-color: black;
+    border-radius: 100%;
+    position:absolute;
+    top: -22.5px;
+    right: -22.5px;
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close-btn:hover {
+    background-color: blueviolet;
+}
+
+.modal-close-btn:before, .modal-close-btn:after {
+    position: absolute;
+    content: ' ';
+    height: 15px;
+    width: 3px;
+    background-color: white;
+}
+.modal-close-btn:before {
+    transform: rotate(45deg);
+}
+
+.modal-close-btn:after {
+    transform: rotate(-45deg);
+}
+
+

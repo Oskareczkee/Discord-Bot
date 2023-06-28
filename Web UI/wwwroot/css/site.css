@@ -1,0 +1,114 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.background-fantasy {
+    position: relative;
+}
+    .background-fantasy::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        content: " ";
+        width: inherit;
+        height: inherit;
+        padding: inherit;
+
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        background-image: url("../img/background-fantasy.jpg");
+        z-index: -1;
+        opacity: 30%;
+    }
+
+.no-padding{
+    padding: 0 !important;
+}
+
+.no-margin{
+    margin: 0 !important;
+}
+
+.btn-fantasy{
+    background-color: blueviolet;
+    color: white;
+    padding: 0px 10px 0px 10px;
+
+    transition: all ease .2s;
+}
+
+.btn-fantasy-sm {
+    padding: 0px 10px 5px 0px;
+}
+
+.btn-fantasy-md {
+    padding: 5px 10px 5px 10px
+}
+
+.btn-fantasy:hover{
+    color: white;
+    background-color: darkviolet;
+}
+
+tr.hide-table-padding td{
+    padding: 0;
+}
+
+.list-group-bg-black-transparent .list-group-item{
+    color: white;
+    background-color: rgba(0,0,0,0.3);
+    border: none;
+}
+
+.list-group-bg-black-transparent .list-group-item:hover:not(.active){
+    color: blueviolet;
+    background-color: rgba(0,0,0,0.35);
+}
+
+.list-group-bg-black-transparent .active {
+    margin-top:0px !important;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.table-bg-black-transparent {
+    color: white !important;
+    background-color: rgba(0,0,0,0.3);
+    border: 0px solid transparent;
+    display: 
+}
+
+    .table-bg-black-transparent.table-striped > tbody > tr:nth-child(odd){
+        background-color: rgba(0,0,0,0.3);
+        color: white;
+    }
+    /*this removes filckering effect when table is hovered*/
+    .table-bg-black-transparent.table-striped > tbody > tr{
+        border-left: 2px solid transparent;
+        color: white;
+    }
+
+    /*this also allows to disable hover just by adding hover-disable class in element, check Items.cshtml for use*/
+    .table-bg-black-transparent.table-striped > tbody > tr:hover:not(.hover-disable) {
+        border-left: 2px solid white;
+        color: blueviolet;
+    }

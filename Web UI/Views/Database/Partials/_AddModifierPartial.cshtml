@@ -1,0 +1,27 @@
+﻿@using DB.Models.Items;
+@using DB.Models.Items.Enums;
+@model int
+
+<div class="row modifier-row">
+    <div class="col-md-6 mt-2">
+        @{
+            var modifiersList = new List<SelectListItem>();
+            foreach (var mod in Enum.GetValues<Modifiers>())
+                modifiersList.Add(new SelectListItem { Text = Enum.GetName<Modifiers>(mod), Value = ((int)mod).ToString() });
+
+            <label class="form-label">Modifier</label>
+            <select class="form-select" name="Modifiers"
+                asp-items=modifiersList>
+            </select>
+        }
+    </div>
+    <div class="col-md-6 mt-2">
+        <label class="form-label">Bonus %</label>
+        <span class="d-flex gap-3">
+            <input required type="number" min="1" class="form-control" name="Modifiers" />
+            <a class="btn btn-danger row-delete-btn">
+                Remove
+            </a>
+        </span>
+    </div>
+</div>

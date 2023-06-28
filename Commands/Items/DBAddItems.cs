@@ -15,7 +15,7 @@ namespace Bot.Commands.Items
         //epic items are added to special db set called epic items
         public async Task AddItem(CommandContext ctx, bool isEpicItem = false)
         {
-            ItemType type = ItemType.None;
+            ItemType type = ItemType.Miscellaneous;
             string itemDescription = string.Empty;
             string itemName = string.Empty;
             int itemPrice = 0;
@@ -84,7 +84,7 @@ namespace Bot.Commands.Items
                 return;
 
             await _itemService.CreateNewItemAsync(item, isEpicItem);
-            await ctx.Channel.SendMessageAsync($"IItem {item.Name} has been successfully added!").ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync($"{item.Name} has been successfully added!").ConfigureAwait(false);
         }
 
         [Command("addepicitem")]
