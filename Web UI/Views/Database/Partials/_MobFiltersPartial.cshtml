@@ -1,0 +1,139 @@
+﻿@using Web_UI.Models.Filters;
+@model MobFilters
+
+<div class="p-2 me-3">
+    <!--
+        Validation is not used, instead we take errors if there are any, and display them after refresh
+        Displaying errors in modal error is pretty hard
+        <div asp-validation-summary="All" class="text-danger"></div>
+    -->
+
+    <h5>Mob Filters</h5>
+    <form method="post" asp-action="SaveMobFilters">
+        <div class="mb-3">
+            <label asp-for="NameFilter" class="form-label"></label>
+            <input asp-for="NameFilter" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DescriptionFilter" class="form-label"></label>
+            <input asp-for="DescriptionFilter" class="form-control" />
+        </div>
+
+        <div class="mb-3 row">
+            <div class="col-md-3 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinHP" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MinHP" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxHP" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MaxHP" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-md-3 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinDMG" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MinDMG" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxDMG" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MaxDMG" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-md-3 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinGoldAward" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MinGoldAward" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxGoldAward" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MaxGoldAward" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-md-3 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinXPAward" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MinXPAward" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxXPAward" class="form-label"></label>
+                    <input type="number" min="0" asp-for="MaxXPAward" class="form-control" />
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mb-3 row" id="Stats">
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinStrength" class="form-label"></label>
+                    <input asp-for="MinStrength" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxStrength" class="form-label"></label>
+                    <input asp-for="MaxStrength" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinAgility" class="form-label"></label>
+                    <input asp-for="MinAgility" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxAgility" class="form-label"></label>
+                    <input asp-for="MaxAgility" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinIntelligence" class="form-label"></label>
+                    <input asp-for="MinIntelligence" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxIntelligence" class="form-label"></label>
+                    <input asp-for="MaxIntelligence" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinEndurance" class="form-label"></label>
+                    <input asp-for="MinEndurance" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxEndurance" class="form-label"></label>
+                    <input asp-for="MaxEndurance" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinLuck" class="form-label"></label>
+                    <input asp-for="MinLuck" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxLuck" class="form-label"></label>
+                    <input asp-for="MaxLuck" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinResistance" class="form-label"></label>
+                    <input asp-for="MinResistance" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxResistance" class="form-label"></label>
+                    <input asp-for="MaxResistance" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-fantasy btn-fantasy-md">Filter</button>
+            <a class="btn btn-fantasy btn-fantasy-md modal-close">Cancel</a>
+        </div>
+
+    </form>
+</div>

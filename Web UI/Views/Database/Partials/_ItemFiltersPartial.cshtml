@@ -1,0 +1,139 @@
+﻿@using DB.Models.Items.Enums;
+@using DB.Models.Items;
+@using Web_UI.Models.Filters;
+@model ItemFilters
+
+<div class="p-2 me-3">
+    <!--
+        Validation is not used, instead we take errors if there are any, and display them after refresh
+        Displaying errors in modal error is pretty hard
+        <div asp-validation-summary="All" class="text-danger"></div>
+    -->
+
+    <h5>Item Filters</h5>
+    <form method="post" asp-action="SaveItemFilters">
+        <div class="mb-3">
+            <label asp-for="NameFilter" class="form-label"></label>
+            <input asp-for="NameFilter" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DescriptionFilter" class="form-label"></label>
+            <input asp-for="DescriptionFilter" class="form-control" />
+        </div>
+
+        <div class="mb-3 row">
+            <div class="col-md-6">
+                <label asp-for="MinPrice" class="form-label"></label>
+                <input type="number" min="0" asp-for="MinPrice" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="MaxPrice" class="form-label"></label>
+                <input type="number" min="0" asp-for="MaxPrice" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TypeFilter" class="form-label"></label>
+            @{
+                var itemTypes = new List<SelectListItem>();
+                itemTypes.Add(new SelectListItem { Text = "All", Value = null });
+                foreach (var type in Enum.GetValues<ItemType>())
+                    itemTypes.Add(new SelectListItem { Text = Enum.GetName<ItemType>(type), Value = ((int)type).ToString() });
+            <select asp-for="TypeFilter" class="form-select" id="SelectType"
+                    asp-items="itemTypes">
+            </select>
+            }
+        </div>
+
+        <div class="mb-3 row @(Model.TypeFilter==ItemType.Weapon ? "" : "d-none")" id="WeaponDamage">
+            <div class="col-md-6 mt-2">
+                <label asp-for="MinDamage" class="form-label"></label>
+                <input type="number" min="0" asp-for="MinDamage" class="form-control" />
+            </div>
+            <div class="col-md-6 mt-2">
+                <label asp-for="MaxDamage" class="form-label"></label>
+                <input type="number" min="0" asp-for="MaxDamage" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3 row @(Model.TypeFilter==ItemType.Miscellaneous || Model.TypeFilter==ItemType.Potion ? "d-none" : "")" id="Stats">
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinStrength" class="form-label"></label>
+                    <input asp-for="MinStrength" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxStrength" class="form-label"></label>
+                    <input asp-for="MaxStrength" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinAgility" class="form-label"></label>
+                    <input asp-for="MinAgility" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxAgility" class="form-label"></label>
+                    <input asp-for="MaxAgility" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinIntelligence" class="form-label"></label>
+                    <input asp-for="MinIntelligence" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxIntelligence" class="form-label"></label>
+                    <input asp-for="MaxIntelligence" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinEndurance" class="form-label"></label>
+                    <input asp-for="MinEndurance" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxEndurance" class="form-label"></label>
+                    <input asp-for="MaxEndurance" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinLuck" class="form-label"></label>
+                    <input asp-for="MinLuck" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxLuck" class="form-label"></label>
+                    <input asp-for="MaxLuck" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-2 d-flex flex-column">
+                <div>
+                    <label asp-for="MinArmor" class="form-label"></label>
+                    <input asp-for="MinArmor" class="form-control" />
+                </div>
+                <div class="mt-2">
+                    <label asp-for="MaxArmor" class="form-label"></label>
+                    <input asp-for="MaxArmor" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 @(Model.TypeFilter==ItemType.Potion ? "" : "d-none")" id="Modifiers">
+            <div class=" row-cols-12 w-100 btn btn-fantasy btn-fantasy-md"
+                 onclick="AddPartialContent
+                        ('@Url.Action("AddModifierFilterPartialView","Database",1)', '#Modifiers')">
+                Add new Modifier Filter
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-fantasy btn-fantasy-md">Filter</button>
+            <a class="btn btn-fantasy btn-fantasy-md modal-close">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+<script src="~/js/item-add.js"></script>

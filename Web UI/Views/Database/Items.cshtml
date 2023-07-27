@@ -1,18 +1,29 @@
 ﻿@using DB.Models.Items
 @using DB.Models.Items.Enums;
+@using Web_UI.Models;
+@using Web_UI.Models.Filters;
 @model DatabaseViewModel<ItemBase>
 @{
     Layout = "_DatabaseLayout";
     ViewData["Title"] = "Database manager";
+    var ItemFilters = new DatabaseSession(Context.Session).GetItemFilters();
 }
 
 @section Filters{
+    <a class="list-group-item"
+       onclick="new ModalWindow('@Url.Action("ItemFiltersPartialView", "Database",  ItemFilters)').open()">
+        Filters
+    </a>
 }
 
-@section AddNewBtn{
+@section Controls{
     <a class="btn btn-fantasy btn-fantasy-md"
        onclick="new ModalWindow('@Url.Action("AddItemPartialView", "Database", new ItemBase())').open()">
         Add New Item
+    </a>
+    <a class="btn btn-fantasy btn-fantasy-md"
+        asp-action="ClearItemFilters">
+        Clear Filters
     </a>
 }
 

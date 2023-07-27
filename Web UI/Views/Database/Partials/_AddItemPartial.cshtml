@@ -1,5 +1,6 @@
 ﻿@using DB.Models.Items;
 @using DB.Models.Items.Enums;
+@using Web_UI.Models;
 @model AddItemViewModel
 @{
     TempData["Operation"] = Model.Item.Name == string.Empty ? "Add" : "Update";

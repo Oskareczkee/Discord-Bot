@@ -117,13 +117,14 @@ namespace Bot.Commands
         {
             //set seed, seed changes every hour
             Random r;
+            int hrs = (int)(DateTime.Now - DateTime.MinValue).TotalHours;
             if (mention != null)
-                r = new Random((int)DateTime.Now.TimeOfDay.TotalHours + (int)mention.Id);
+                r = new Random(hrs + (int)mention.Id);
             else
-                r = new Random((int)DateTime.Now.TimeOfDay.TotalHours + (int)ctx.User.Id);
+                r = new Random(hrs + (int)ctx.User.Id);
 
             //generate size
-            var dickSize = r.Next(0, 30);
+            var dickSize = r.Next(0, 31);
 
             if (dickSize < 10)
                 await ctx.Channel.SendMessageAsync("XDD ale mały huj").ConfigureAwait(false);

@@ -1,18 +1,27 @@
 ﻿@using DB.Models.Mobs;
+@using Web_UI.Models;
 @model DatabaseViewModel<Mob>
 @{
     Layout = "_DatabaseLayout";
     ViewData["Title"] = "Database manager";
+    var MobFilters = new DatabaseSession(Context.Session).GetMobFilters();
 }
 
 @section Filters{
-
+    <a class="list-group-item"
+       onclick="new ModalWindow('@Url.Action("MobFiltersPartialView", "Database",  MobFilters)').open()">
+        Filters
+    </a>
 }
 
-@section AddNewBtn{
+@section Controls{
     <a class="btn btn-fantasy btn-fantasy-md"
        onclick="new ModalWindow('@Url.Action("AddMobPartialView", "Database", new Mob())').open()">
         Add New Mob
+    </a>
+    <a class="btn btn-fantasy btn-fantasy-md"
+        asp-action="ClearMobFilters">
+        Clear Filters
     </a>
 }
 
@@ -22,6 +31,7 @@
             <th>Name</th>
             <th>Gold</th>
             <th>XP</th>
+            <th>HP</th>
             <th>DMG</th>
             <th>Strength</th>
             <th>Agility</th>
@@ -39,9 +49,10 @@
             double Resistance = mob.Resistance / 100.0; <!--Convert resistance to percents-->
             <tr>
                 <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Name</td>
-                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.GoldAward</td>
-                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.XPAward</td>
-                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.BaseDMG</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.GoldAward.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.XPAward.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.HP.ToString()</td>
+                <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.BaseDMG.ToString()</td>
                 <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Strength.ToString()</td>
                 <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Agility.ToString()</td>
                 <td data-bs-toggle="collapse" data-bs-target="#ID_@mob.ID">@mob.Intelligence.ToString()</td>
