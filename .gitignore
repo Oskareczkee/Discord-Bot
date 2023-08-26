@@ -5,6 +5,7 @@
 
 # Hide files with data
 .appsettings.Development.json
+.test-file.txt
 
 # User-specific files
 *.rsuser
