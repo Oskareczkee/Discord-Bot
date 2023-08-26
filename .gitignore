@@ -4,8 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Hide files with data
-.appsettings.Development.json
-.test-file
+appsettings.Development.json
+test-file
 
 # User-specific files
 *.rsuser
