@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace Web_UI.Models.Filters
 {
     public class Filters
     {
+        public ulong? GuildID { get; set; }
+
         [Display(Name = "Name")]
         public string? NameFilter { get; set; } = string.Empty;
         [Display(Name = "Description")]

@@ -17,7 +17,7 @@ namespace Bot.Commands.Items
         {
             Profile profile = await _profileService.GetOrCreateProfileAsync(ctx.Member.Id, ctx.Guild.Id).ConfigureAwait(false);
 
-            var shopItems = await _itemShopService.GetOrCreatePlayerShop(profile.DiscordID, profile.GuildID);
+            var shopItems = await _itemShopService.GetOrCreatePlayerShopAsync(profile.DiscordID, profile.GuildID ?? 0);
             int chosenItem = 0;
 
             var shopEmbed = new DiscordEmbedBuilder
@@ -60,7 +60,7 @@ namespace Bot.Commands.Items
             //reroll case
             if (chosenItem == 13)
             {
-                bool enoughGold = await _itemShopService.RerollItemShop(profile.DiscordID, profile.GuildID, ShopRerollCost(profile.Level)).ConfigureAwait(false);
+                bool enoughGold = await _itemShopService.RerollItemShopAsync(profile.DiscordID, profile.GuildID ?? 0, ShopRerollCost(profile.Level)).ConfigureAwait(false);
 
                 if (!enoughGold)
                 {
@@ -78,7 +78,7 @@ namespace Bot.Commands.Items
             IItem item = shopItems[chosenItem - 1];
 
             //await _itemService.AddItemAsync(ctx.Member.Id, ctx.Guild.Id, item);
-            ItemPurchaseState purchaseState = await _itemService.PurchaseItemAsync(ctx.Member.Id, ctx.Guild.Id, item).ConfigureAwait(false);
+            ItemPurchaseState purchaseState = await _itemShopService.PurchaseItemAsync(ctx.Member.Id, ctx.Guild.Id, item).ConfigureAwait(false);
 
             switch (purchaseState)
             {
@@ -91,7 +91,7 @@ namespace Bot.Commands.Items
                 case ItemPurchaseState.EverythingWentGood:
                     {
                         await ctx.Channel.SendMessageAsync($"item {item.Name} has been successfully bought!").ConfigureAwait(false);
-                        bool itemChangedProperly = await _itemShopService.ChangeShopItem(profile.DiscordID, profile.GuildID, chosenItem - 1, (await _itemShopService.GetShopItems(1, profile.Level)).FirstOrDefault());
+                        bool itemChangedProperly = await _itemShopService.ChangeShopItemAsync(profile.DiscordID, profile.GuildID ?? 0, chosenItem - 1, (await _itemShopService.GetShopItemsAsync(1, profile.Level, ctx.Guild.Id)).FirstOrDefault());
                         if (!itemChangedProperly)
                             await ctx.Channel.SendMessageAsync($"But... Somehow next item in the shop couldn't be changed").ConfigureAwait(false);
                         break;

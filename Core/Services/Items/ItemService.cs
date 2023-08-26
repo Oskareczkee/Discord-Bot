@@ -13,21 +13,20 @@ using System.Threading.Tasks;
 
 namespace Core.Services.Items
 {
-    public enum ItemPurchaseState {ItemNotFound, NotEnoughGold, EverythingWentGood }
     public interface IItemService
     {
-        Task CreateNewItemAsync(IItem item, bool isEpicItem=false);
-        Task UpdateItemAsync(IItem item);
-        Task<IItem> GetItemByName(string name);
+        Task CreateNewItemAsync(IItem item,ulong guildID, bool isEpicItem=false);
+        Task UpdateItemAsync(IItem item, ulong guildID);
+        Task<IItem> GetItemByNameAsync(string name, ulong guildID);
 
-        Task<ItemPurchaseState> PurchaseItemAsync(ulong discordId, ulong guildID, IItem item);
-
-        Task AddItemAsync(ulong discordID, ulong guildID, IItem item);
-
-        Task<List<IItem>> GetItemsListAsync();
-        Task<IItem> GetRandomItem();
-        Task<bool> EquipItemAsync(ulong discordID, ulong guildID, IItem item);
-        Task<bool> UseConsumableAsync(ulong discordID, ulong guildID, IItem? consumable, int potionSlot);
+        /// <summary>
+        /// Gets list of items on server
+        /// </summary>
+        Task<List<IItem>> GetItemsListAsync(ulong guildID);
+        /// <summary>
+        /// Gets random item from given server
+        /// </summary>
+        Task<IItem> GetRandomItemAsync(ulong guildID);
 
         /// <summary>
         /// Scales item to given level
@@ -47,154 +46,57 @@ namespace Core.Services.Items
     {
 
         private readonly DbContextOptions<Context> _options;
-        private readonly IProfileService _profileService;
 
-        public ItemService(DbContextOptions<Context> options, IProfileService profileService)
-        {
-            _options = options;
-            _profileService = profileService;
-        }
-         
+        public ItemService(DbContextOptions<Context> options, IProfileService profileService) => _options = options;
+    
         /// <summary>
         /// Find an item by name
         /// </summary>
         /// <returns>Default if item was not found</returns>
-        public async Task<IItem> GetItemByName(string name)
+        public async Task<IItem> GetItemByNameAsync(string name, ulong guildID)
         {
             using var _context = new Context(_options);
 
             //check for item in ordinary items database
-            IItem item = await _context.Items.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower()).ConfigureAwait(false) ?? null!;
+            IItem item = await _context.Items.Where(i=> i.GuildID==guildID).FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower()).ConfigureAwait(false) ?? null!;
             return item;
 
         }
 
-        public async Task CreateNewItemAsync(IItem item, bool isEpicItem=false)
+        public async Task CreateNewItemAsync(IItem item,ulong guildID, bool isEpicItem=false)
         {
             using var _context = new Context(_options);
 
            if(!isEpicItem)
-              await _context.Items.AddAsync((ItemBase)item).ConfigureAwait(false);
+              await _context.Items.AddAsync(new ItemBase(guildID, item)).ConfigureAwait(false);
            //else
                 //await _context.EpicItems.AddAsync(new EpicItem(item)).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task UpdateItemAsync(IItem item)
+        public async Task UpdateItemAsync(IItem item, ulong guildID)
         {
             using var _context = new Context(_options);
 
-            _context.Items.Update((ItemBase)item);
+            _context.Items.Update(new ItemBase(guildID, item));
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<ItemPurchaseState> PurchaseItemAsync(ulong discordId, ulong guildID, IItem item)
+        public async Task<List<IItem>> GetItemsListAsync(ulong guildID)
         {
             using var context = new Context(_options);
-
-            if (item == null)
-                return ItemPurchaseState.ItemNotFound;
-
-            Profile profile = await _profileService.GetOrCreateProfileAsync(discordId, guildID).ConfigureAwait(false);
-
-            if (profile.Gold < item.Price)
-                return ItemPurchaseState.NotEnoughGold;
-
-            profile.Gold -= item.Price;
-
-            profile.Items.Add(new ProfileItem(profile.ID, item));
-
-            context.Profiles.Update(profile);
-            await context.SaveChangesAsync().ConfigureAwait(false);
-
-            return ItemPurchaseState.EverythingWentGood;
-
-        }
-
-
-        public async Task<List<IItem>> GetItemsListAsync()
-        {
-            using var context = new Context(_options);
-            List<IItem> Items = await context.Items.Cast<IItem>().ToListAsync().ConfigureAwait(false);
+            List<IItem> Items = await context.Items.Where(i=> i.GuildID==guildID).Cast<IItem>().ToListAsync().ConfigureAwait(false);
 
             return Items;
         }
 
-        public async Task AddItemAsync(ulong discordID, ulong guildID, IItem item)
-        {
-            //this function basically works like purchase item, but does not require gold, takes actual item as an argument
-
-            using var context = new Context(_options);
-
-            Profile profile = await _profileService.GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
-
-            profile.Items.Add(new ProfileItem(profile.ID, item));
-
-            context.Profiles.Update(profile);
-            await context.SaveChangesAsync().ConfigureAwait(false);
-        }
-
-        public async Task<IItem> GetRandomItem()
+        public async Task<IItem> GetRandomItemAsync(ulong guildID)
         {
             using var _context = new Context(_options);
-            int randomIndex = BotMath.RandomNumberGenerator.Next(0, _context.Items.Count());
+            var items = _context.Items.Where(i => i.GuildID == guildID);
+            int randomIndex = BotMath.RandomNumberGenerator.Next(0, items.Count());
 
-            return await _context.Items.Skip(randomIndex).Take(1).FirstAsync();
-        }
-
-        public async Task<bool> EquipItemAsync(ulong discordID, ulong guildID, IItem item)
-        {
-            using var _context = new Context(_options);
-
-            Profile profile = await _profileService.GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
-
-            int index = (int)(item.Type) - 1;
-
-            if (profile.Equipment[index].Name.Equals("None", StringComparison.OrdinalIgnoreCase))
-            {
-                if (item.Name.Equals("None"))
-                    return false;
-
-                profile.Equipment[index].ChangeItemProperties(item);
-                _context.Profiles.Update(profile);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                await _profileService.UseItemAsync(discordID,guildID,item);
-                return true;
-            }
-            else
-            {
-                await AddItemAsync(discordID, guildID, profile.Equipment[index]);
-                profile.Equipment[index].ChangeItemProperties(item);
-                _context.Profiles.Update(profile);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                await _profileService.UseItemAsync(discordID, guildID,item);
-                return true;
-            }
-        }
-
-        public async Task<bool> UseConsumableAsync(ulong discordID, ulong guildID, IItem? consumable, int potionSlot)
-        {
-            //max 3 potion slots
-            if (consumable!.Type != ItemType.Potion || potionSlot>3 || potionSlot<1)
-                return false;
-
-            //match the potion indexes in equipment
-            int index =potionSlot +8;
-
-            using var _context = new Context(_options);
-            Profile profile = await _profileService.GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
-            //indexes 9-11 are reserved for consumables
-
-            //player wants to add none item to empty slot
-            if (consumable.Name.Equals("None", StringComparison.OrdinalIgnoreCase) && profile.Equipment[index].Name.Equals("None", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            //potions are irreplacable, we do not give it back to equipment
-            profile.Equipment[index].ChangeItemProperties(consumable);
-            _context.Profiles.Update(profile);
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-            await _profileService.UseItemAsync(discordID, guildID, consumable);
-            return true;
+            return await items.Skip(randomIndex).Take(1).FirstAsync();
         }
 
         public IItem ScaleItem(IItem item, int level, bool useRandomFactors=true)

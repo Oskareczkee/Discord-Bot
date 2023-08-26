@@ -62,7 +62,7 @@ namespace Bot.Commands.Items
                 return;
             }
 
-            IItem itemCheck = await _itemService.GetItemByName(itemName).ConfigureAwait(false);
+            IItem itemCheck = await _itemService.GetItemByNameAsync(itemName, ctx.Guild.Id).ConfigureAwait(false);
             if (itemCheck != null)
             {
                 await ctx.Channel.SendMessageAsync($"IItem with name ${itemName} already exists in the database");
@@ -83,7 +83,7 @@ namespace Bot.Commands.Items
             if (item == null)
                 return;
 
-            await _itemService.CreateNewItemAsync(item, isEpicItem);
+            await _itemService.CreateNewItemAsync(item,ctx.Guild.Id, isEpicItem);
             await ctx.Channel.SendMessageAsync($"{item.Name} has been successfully added!").ConfigureAwait(false);
         }
 
@@ -97,6 +97,7 @@ namespace Bot.Commands.Items
         {
             ItemBase item = new()
             {
+                GuildID = ctx.Guild.Id,
                 Name = name,
                 Description = description,
                 Price = price,

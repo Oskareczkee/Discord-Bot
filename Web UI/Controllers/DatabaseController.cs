@@ -1,12 +1,13 @@
 ﻿using DB;
 using DB.Models.Items;
 using DB.Models.Mobs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web_UI.Models;
-using Web_UI.Models.Filters;
 
 namespace Web_UI.Controllers
 {
+    [Authorize]
     public partial class DatabaseController : Controller
     {
         private readonly Context context = null!;
@@ -15,7 +16,10 @@ namespace Web_UI.Controllers
 
         public ViewResult Items(DatabaseViewModel<ItemBase> model)
         {
-            var filters = new DatabaseSession(HttpContext.Session).GetItemFilters();
+            var session = new DatabaseSession(HttpContext.Session);
+            var filters = session.GetItemFilters();
+            filters.GuildID = session.GetServer();
+
             var items = FilterItems(filters).ToList();
             model.Entities = items.Take(PageItemCount).ToList();
             return View(model);
@@ -23,7 +27,10 @@ namespace Web_UI.Controllers
 
         public ViewResult Mobs(DatabaseViewModel<Mob> model)
         {
-            var filters = new DatabaseSession(HttpContext.Session).GetMobFilters();
+            var session = new DatabaseSession(HttpContext.Session);
+            var filters = session.GetMobFilters();
+            filters.GuildID = session.GetServer();
+
             var mobs = FilterMobs(filters).ToList();
             model.Entities = mobs.Take(PageItemCount).ToList();
             return View(model);
@@ -55,6 +62,8 @@ namespace Web_UI.Controllers
             {
                 string modifiers = string.Join(' ', model.Modifiers);
                 model.Item.Modifiers = modifiers;
+                var guildID = new DatabaseSession(HttpContext.Session).GetServer();
+                model.Item.GuildID = guildID;
                 context.Items.Update(model.Item);
                 context.SaveChanges();
                 return RedirectToAction("Items");
@@ -72,6 +81,8 @@ namespace Web_UI.Controllers
         {
             if(ModelState.IsValid)
             {
+                var guildID = new DatabaseSession(HttpContext.Session).GetServer();
+                model.GuildID = guildID;
                 context.Mobs.Update(model);
                 context.SaveChanges();
                 return RedirectToAction("Mobs");

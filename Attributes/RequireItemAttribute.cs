@@ -21,7 +21,7 @@ namespace Bot.Attributes
 
         public async override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
         {
-            var Item = await ItemService.GetItemByName(itemName);
+            var Item = await ItemService.GetItemByNameAsync(itemName, ctx.Guild.Id);
             if (Item == null)
             {
                 await ctx.Channel.SendMessageAsync($"Attribute: RequireItem - Item {itemName} has not been found in items database");

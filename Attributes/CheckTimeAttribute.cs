@@ -40,7 +40,7 @@ namespace Bot.Attributes
                         }
                         profile.lastFightTime = DateTime.Now;
                         profile.nextFightTime = profile.lastFightTime.AddSeconds(_secondToWait);
-                        await _profileService.UpdateProfile(profile);
+                        await _profileService.UpdateProfileAsync(profile);
                         return true;
                     }
                 case TimeCheckMode.Quest:
@@ -52,7 +52,7 @@ namespace Bot.Attributes
                         }
                         profile.lastQuestTime = DateTime.Now;
                         profile.nextQuestTime = profile.lastQuestTime.AddSeconds(_secondToWait);
-                        await _profileService.UpdateProfile(profile);
+                        await _profileService.UpdateProfileAsync(profile);
                         return true;
                     }
                 default:

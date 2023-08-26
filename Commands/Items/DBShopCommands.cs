@@ -27,7 +27,7 @@ namespace Bot.Commands.Items
         [Description("Shows you list of all items")]
         public async Task ItemList(CommandContext ctx)
         {
-            var items = await _itemService.GetItemsListAsync().ConfigureAwait(false);
+            var items = await _itemService.GetItemsListAsync(ctx.Guild.Id).ConfigureAwait(false);
 
             var embed = new DiscordEmbedBuilder
             {
@@ -82,7 +82,7 @@ namespace Bot.Commands.Items
                 return;
             }
 
-            var item = await _itemService.GetItemByName(itemName).ConfigureAwait(false);
+            var item = await _itemService.GetItemByNameAsync(itemName, ctx.Guild.Id).ConfigureAwait(false);
 
             if (item == null)
             {

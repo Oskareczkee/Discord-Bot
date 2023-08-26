@@ -5,16 +5,6 @@
  * please do not use #define DATABASE_CLEAR here
  */
 
-using DB;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
 #if DATABASE_CLEAR
 
 namespace Core.Services

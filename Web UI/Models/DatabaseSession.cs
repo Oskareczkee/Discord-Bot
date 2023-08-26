@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using System.Diagnostics.Eventing.Reader;
+using System.Reflection.Metadata.Ecma335;
 using Web_UI.Models.Filters;
 
 namespace Web_UI.Models
@@ -8,6 +9,7 @@ namespace Web_UI.Models
         private const string ErrorsKey = "Errors";
         private const string ItemFiltersKey = "ItemFilters";
         private const string MobFiltersKey = "MobFilters";
+        private const string ServerKey = "Server";
 
         private ISession Session { get; set; }
         public DatabaseSession(ISession session) => Session = session;
@@ -34,5 +36,7 @@ namespace Web_UI.Models
         public ItemFilters GetItemFilters() => Session.GetObject<ItemFilters>(ItemFiltersKey) ?? new();
         public void SetMobFilters(MobFilters filter) => Session.SetObject(MobFiltersKey, filter);
         public MobFilters GetMobFilters() => Session.GetObject<MobFilters>(MobFiltersKey) ?? new();
+        public void SetServer(ulong serverID) => Session.SetObject<ulong?>(ServerKey, serverID);
+        public ulong? GetServer() => Session.GetObject<ulong?>(ServerKey);
     }
 }

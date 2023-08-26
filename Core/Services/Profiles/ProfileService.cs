@@ -1,4 +1,5 @@
-﻿using DB;
+﻿using Core.Services.Items;
+using DB;
 using DB.Models.Items;
 using DB.Models.Items.Enums;
 using DB.Models.Profiles;
@@ -15,7 +16,7 @@ namespace Core.Services.Profiles
         /// <param name="guildID"></param>
         /// <returns>Found or created profile</returns>
         Task<Profile> GetOrCreateProfileAsync(ulong discordID, ulong guildID);
-        Task<Profile> GetProfileWithEquipmentStats(ulong discordID, ulong guildID);
+        Task<Profile> GetProfileWithEquipmentStatsAsync(ulong discordID, ulong guildID);
 
         /// <summary>
         /// Uses item if player has it in his inventory
@@ -25,7 +26,11 @@ namespace Core.Services.Profiles
         /// <param name="itemName"></param>
         /// <returns>true if item was found, false if could'nt find item in inventory</returns>
         Task<bool> UseItemAsync(ulong discordID, ulong guildID, IItem item);
-        Task ClearPotions(ulong discordID, ulong guildID);
+        Task ClearPotionsAsync(ulong discordID, ulong guildID);
+
+        Task<bool> EquipItemAsync(ulong discordID, ulong guildID, IItem item);
+        Task AddItemAsync(ulong discordID, ulong guildID, IItem item);
+        Task<bool> UseConsumableAsync(ulong discordID, ulong guildID, IItem? consumable, int potionSlot);
 
         /// <summary>
         /// levels up profile skill by amount
@@ -35,11 +40,11 @@ namespace Core.Services.Profiles
         /// <param name="skill"></param>
         /// <param name="amount"></param>
         /// <returns>true if everything went ok, false if skill type was none or undefined</returns>
-        Task<bool> LevelUpSkill(ulong discordID, ulong guildID, SkillType skill, int amount, ulong goldPrice);
-        Task AddGold(ulong discordID, ulong guildID, int amount);
-        Task UpdateProfile(Profile profile);
-        Task<EquipmentStats> GetEquipmentStats(ulong discordID, ulong guildID);
-        Task<Dictionary<Modifiers, double>> GetEquipmentModifiers(ulong discordID, ulong guildID);
+        Task<bool> LevelUpSkillAsync(ulong discordID, ulong guildID, SkillType skill, int amount, ulong goldPrice);
+        Task AddGoldAsync(ulong discordID, ulong guildID, int amount);
+        Task UpdateProfileAsync(Profile profile);
+        Task<EquipmentStats> GetEquipmentStatsAsync(ulong discordID, ulong guildID);
+        Task<Dictionary<Modifiers, double>> GetEquipmentModifiersAsync(ulong discordID, ulong guildID);
     }
 
         /// <summary>
@@ -59,12 +64,9 @@ namespace Core.Services.Profiles
     public class ProfileService: IProfileService
     {
         private readonly DbContextOptions<Context> _options;
-        public ProfileService(DbContextOptions<Context> options)
-        {
-            _options = options;
-        }
+        public ProfileService(DbContextOptions<Context> options) => _options = options;
 
-        public async Task AddGold(ulong discordID, ulong guildID, int amount)
+        public async Task AddGoldAsync(ulong discordID, ulong guildID, int amount)
         {
             using var _context = new Context(_options);
 
@@ -74,6 +76,20 @@ namespace Core.Services.Profiles
 
             _context.Profiles.Update(profile);
             await _context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task AddItemAsync(ulong discordID, ulong guildID, IItem item)
+        {
+            //this function basically works like purchase item, but does not require gold, takes actual item as an argument
+
+            using var context = new Context(_options);
+
+            Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
+
+            profile.Items.Add(new ProfileItem(profile.ID, item));
+
+            context.Profiles.Update(profile);
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
 
@@ -113,12 +129,65 @@ namespace Core.Services.Profiles
             _context.Profiles.Update(profile);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-
-
             return profile;
         }
 
-        public async Task<bool> LevelUpSkill(ulong discordID, ulong guildID, SkillType skill, int amount, ulong goldPrice)
+        public async Task<bool> EquipItemAsync(ulong discordID, ulong guildID, IItem item)
+        {
+            using var _context = new Context(_options);
+
+            Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
+
+            int index = (int)(item.Type) - 1;
+
+            if (profile.Equipment[index].Name.Equals("None", StringComparison.OrdinalIgnoreCase))
+            {
+                if (item.Name.Equals("None"))
+                    return false;
+
+                profile.Equipment[index].ChangeItemProperties(item);
+                _context.Profiles.Update(profile);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                await UseItemAsync(discordID, guildID, item);
+                return true;
+            }
+            else
+            {
+                await AddItemAsync(discordID, guildID, profile.Equipment[index]);
+                profile.Equipment[index].ChangeItemProperties(item);
+                _context.Profiles.Update(profile);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                await UseItemAsync(discordID, guildID, item);
+                return true;
+            }
+        }
+
+        public async Task<bool> UseConsumableAsync(ulong discordID, ulong guildID, IItem? consumable, int potionSlot)
+        {
+            //max 3 potion slots
+            if (consumable!.Type != ItemType.Potion || potionSlot > 3 || potionSlot < 1)
+                return false;
+
+            //match the potion indexes in equipment
+            int index = potionSlot + 8;
+
+            using var _context = new Context(_options);
+            Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
+            //indexes 9-11 are reserved for consumables
+
+            //player wants to add none item to empty slot
+            if (consumable.Name.Equals("None", StringComparison.OrdinalIgnoreCase) && profile.Equipment[index].Name.Equals("None", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            //potions are irreplacable, we do not give it back to equipment
+            profile.Equipment[index].ChangeItemProperties(consumable);
+            _context.Profiles.Update(profile);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await UseItemAsync(discordID, guildID, consumable);
+            return true;
+        }
+
+        public async Task<bool> LevelUpSkillAsync(ulong discordID, ulong guildID, SkillType skill, int amount, ulong goldPrice)
         {
             using var _context = new Context(_options);
 
@@ -156,7 +225,7 @@ namespace Core.Services.Profiles
             return true;
         }
 
-        public async Task UpdateProfile(Profile profile)
+        public async Task UpdateProfileAsync(Profile profile)
         {
             using var _context = new Context(_options);
 
@@ -185,7 +254,7 @@ namespace Core.Services.Profiles
         }
 
 
-        public async Task<EquipmentStats> GetEquipmentStats(ulong discordID, ulong guildID)
+        public async Task<EquipmentStats> GetEquipmentStatsAsync(ulong discordID, ulong guildID)
         {
             using var _context = new Context(_options);
             Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
@@ -204,7 +273,7 @@ namespace Core.Services.Profiles
             return output;
         }
 
-        public async Task<Dictionary<Modifiers, double>> GetEquipmentModifiers(ulong discordID, ulong guildID)
+        public async Task<Dictionary<Modifiers, double>> GetEquipmentModifiersAsync(ulong discordID, ulong guildID)
         {
             using var _context = new Context(_options);
             Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
@@ -221,7 +290,7 @@ namespace Core.Services.Profiles
             return output;
         }
 
-        public async Task ClearPotions(ulong discordID, ulong guildID)
+        public async Task ClearPotionsAsync(ulong discordID, ulong guildID)
         {
             using var _context = new Context(_options);
             Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
@@ -233,11 +302,11 @@ namespace Core.Services.Profiles
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<Profile> GetProfileWithEquipmentStats(ulong discordID, ulong guildID)
+        public async Task<Profile> GetProfileWithEquipmentStatsAsync(ulong discordID, ulong guildID)
         {
             using var _context = new Context(_options);
             Profile profile = await GetOrCreateProfileAsync(discordID, guildID).ConfigureAwait(false);
-            EquipmentStats eqStats = await GetEquipmentStats(discordID, guildID).ConfigureAwait(false);
+            EquipmentStats eqStats = await GetEquipmentStatsAsync(discordID, guildID).ConfigureAwait(false);
 
 
             profile.Strength += eqStats.Strength;

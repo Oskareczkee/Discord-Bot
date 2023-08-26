@@ -2,8 +2,8 @@
 using DB.Models.Items.Enums;
 using DB.Models.Mobs;
 using DB.Models.Profiles;
+using DB.Models.Servers;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace DB
 {
@@ -16,6 +16,8 @@ namespace DB
         public DbSet<EquipmentItem> ProfileEquipments { get; set; } = null!;
         public DbSet<ShopItem> ProfileShops { get; set; } = null!;
         public DbSet<Mob> Mobs { get; set; } = null!;
+        public DbSet<Server> Servers { get; set; } = null!;
+        public DbSet<ServerMusicSettings> ServerMusic { get; set; } = null!;
         public DbSet<WeaponTypeDB> WeaponTypes { get; set; } = null!;
         public DbSet<ItemTypeDB> ItemTypes { get; set; } = null!;
         public DbSet<ModifiersDB> ItemModifiers { get; set; } = null!;

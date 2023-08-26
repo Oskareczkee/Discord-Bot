@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DB.Models.Servers;
+using System.ComponentModel.DataAnnotations;
 
 namespace DB.Models.Mobs
 {
     public class Mob : Entity
     {
+
+        /*Each mob is unique to server, different servers may have different items*/
+        public ulong? GuildID { get; set; }
+        public Server? Server { get; set; }
 
         [Required(ErrorMessage = "Please enter mob name")]
         public string Name { get; set; } = string.Empty;

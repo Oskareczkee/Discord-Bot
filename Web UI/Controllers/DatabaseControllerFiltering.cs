@@ -1,6 +1,8 @@
 ﻿using DB.Models.Items;
 using DB.Models.Mobs;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Web_UI.Models;
 using Web_UI.Models.Filters;
 
@@ -8,6 +10,13 @@ namespace Web_UI.Controllers
 {
     public partial class DatabaseController
     {
+        public RedirectToActionResult ChangeServer(ulong id, string redirectAction, string redirectController)
+        {
+            var session = new DatabaseSession(HttpContext.Session);
+            session.SetServer(id);
+            return RedirectToAction(redirectAction, redirectController); //refresh page, couldn't find better way to do this, but i believe there is a better way
+        }
+
         public RedirectToActionResult SaveItemFilters(ItemFilters filters)
         {
             var session = new DatabaseSession(HttpContext.Session);
@@ -39,6 +48,8 @@ namespace Web_UI.Controllers
         private IQueryable<Mob> FilterMobs(MobFilters filter)
         {
             IQueryable<Mob> query = context.Mobs;
+
+            query = query.Where(t => t.GuildID == filter.GuildID); //if guild is null, query will not have records
 
             if (!string.IsNullOrEmpty(filter.NameFilter))
                 query = query.Where(t => t.Name.Contains(filter.NameFilter));
@@ -96,6 +107,8 @@ namespace Web_UI.Controllers
         private IQueryable<ItemBase> FilterItems(ItemFilters filter)
         {
             IQueryable<ItemBase> query = context.Items;
+
+            query = query.Where(t => t.GuildID == filter.GuildID); //if guild is null, query will not have records
 
             if (filter.TypeFilter != null)
                 query = query.Where(t => t.Type == filter.TypeFilter);

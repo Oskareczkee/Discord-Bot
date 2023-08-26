@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using DB.Models.Items.Enums;
+using DB.Models.Servers;
 using DB.Models.Validation;
 
 namespace DB.Models.Items
 {
     public class ItemBase : Stats, IItem
     {
+        /*Each item base is unique to server, different servers may have different items*/
+        public ulong? GuildID { get; set; }
+        public Server? Server { get; set; }
+
         [Required(ErrorMessage = "Please enter a name")]
         public string Name { get; set; } = string.Empty;
 
@@ -28,5 +28,20 @@ namespace DB.Models.Items
         [Range(0, int.MaxValue, ErrorMessage = "Max Damage cannot be negative")]
         public int MaxDamage { get; set; } = 0;
         public string Modifiers { get; set; } = string.Empty;
+
+        public ItemBase(ulong? guildID, IItem item)
+        {
+            GuildID = guildID;
+            Name = item.Name;
+            Description = item.Description;
+            Price = item.Price;
+            Type = item.Type;
+            WeaponType = item.WeaponType;
+            MinDamage = item.MinDamage;
+            MaxDamage = item.MaxDamage;
+            Modifiers = item.Modifiers;
+        }
+
+        public ItemBase() { }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DB.Models.Items;
+using DB.Models.Servers;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +24,8 @@ namespace DB.Models.Profiles
         public override int Luck { get; set; } = 10;
 
         public ulong DiscordID { get; set; }
-        public ulong GuildID { get; set; }
+        public ulong? GuildID { get; set; }
+        public Server? Server { get; set; }
         public int XP { get; set; }
 
         public int NextLevel { get; set; }

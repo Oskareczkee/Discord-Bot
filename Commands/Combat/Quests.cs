@@ -31,7 +31,7 @@ namespace Bot.Commands.Combat
 
             CombatInfo combatInfo;
 
-            await _profileService.ClearPotions(attacker.DiscordID, attacker.GuildID);
+            await _profileService.ClearPotionsAsync(attacker.DiscordID, attacker.GuildID);
             //since hp is readonly we have to store amount of damage dealt and compare it to the duelers HPs
             while (true)
             {
@@ -72,13 +72,13 @@ namespace Bot.Commands.Combat
                     int XPAmount = BotMath.CalculateMobXPAmount(Mob.XPAward, attacker.profile.Luck, attacker.profile.Level);
                     await ctx.Channel.SendMessageAsync($"{attacker.Name} was awarded with {GoldAmount} gold and {XPAmount} experience points !");
 
-                    await _profileService.AddGold(attacker.DiscordID, attacker.GuildID, GoldAmount);
+                    await _profileService.AddGoldAsync(attacker.DiscordID, attacker.GuildID, GoldAmount);
                     await _expService.GrantXPAsync(attacker.DiscordID, attacker.GuildID, XPAmount);
                     if (BotMath.Roll(0.25))
                     {
-                        IItem item = await _itemService.GetRandomItem();
+                        IItem item = await _itemService.GetRandomItemAsync(ctx.Guild.Id);
                         await ctx.Channel.SendMessageAsync($"It looks like this monster was snitching something in its place! {item.Name} was added to your inventory!");
-                        await _itemService.AddItemAsync(ctx.Member.Id, ctx.Guild.Id, item);
+                        await _profileService.AddItemAsync(ctx.Member.Id, ctx.Guild.Id, item);
                     }
 
                     break;

@@ -26,7 +26,7 @@ namespace Bot.Commands.Helpers
         [Description("Debug command for adding items")]
         public async Task SpawnItem(CommandContext ctx, string itemName, DiscordMember mention = null)
         {
-            IItem item = await _itemService.GetItemByName(itemName);
+            IItem item = await _itemService.GetItemByNameAsync(itemName, ctx.Guild.Id);
 
             if (item == null)
             {
@@ -35,9 +35,9 @@ namespace Bot.Commands.Helpers
             }
 
             if (mention == null)
-                await _itemService.AddItemAsync(ctx.Member.Id, ctx.Guild.Id, item);
+                await _profileService.AddItemAsync(ctx.Member.Id, ctx.Guild.Id, item);
             else
-                await _itemService.AddItemAsync(mention.Id, mention.Guild.Id, item);
+                await _profileService.AddItemAsync(mention.Id, mention.Guild.Id, item);
             await ctx.Channel.SendMessageAsync($"Item {itemName} has been successfully added to your inventory");
         }
 
@@ -48,12 +48,12 @@ namespace Bot.Commands.Helpers
         {
             if (mention == null)
             {
-                await _profileService.AddGold(ctx.Member.Id, ctx.Guild.Id, amount).ConfigureAwait(false);
+                await _profileService.AddGoldAsync(ctx.Member.Id, ctx.Guild.Id, amount).ConfigureAwait(false);
                 await ctx.Channel.SendMessageAsync($"{amount} gold has been donated to {ctx.Member.DisplayName}").ConfigureAwait(false);
             }
             else
             {
-                await _profileService.AddGold(mention.Id, mention.Guild.Id, amount).ConfigureAwait(false);
+                await _profileService.AddGoldAsync(mention.Id, mention.Guild.Id, amount).ConfigureAwait(false);
                 await ctx.Channel.SendMessageAsync($"{amount} gold has been donated to {mention.DisplayName}").ConfigureAwait(false);
             }
         }

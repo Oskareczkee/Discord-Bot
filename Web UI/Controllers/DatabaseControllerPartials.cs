@@ -43,5 +43,10 @@ namespace Web_UI.Controllers
         {
             return PartialView("Views/Database/Partials/_AddMobPartial.cshtml", model);
         }
+
+        public PartialViewResult ChangeServerPartialView(RedirectionData model)
+        {
+            return PartialView("Views/Database/Partials/_ChangeServerPartial.cshtml", model);
+        }
     }
 }

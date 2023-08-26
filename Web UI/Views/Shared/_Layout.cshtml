@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Web_UI.Models.Discord;
+@{
     string controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     string action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 }
@@ -36,6 +37,29 @@
                                asp-controller="Database" asp-action="Items">Database</a>
                         </li>
                     </ul>
+
+                    @if(!User.Identity.IsAuthenticated)
+                    {   
+                        <a class="btn btn-fantasy btn-fantasy-md"
+                                asp-controller="Authentication" asp-action="Login">Login</a>
+                    }
+                    else
+                    {
+                        <!--I really don't know if i should store user's avatar in session or maybe getting it
+                            straight from discord api does not impact the performance
+                            Advantage of this is that user's avatar will be updated every refresh
+                        -->
+                        @inject IDiscordAPIService Api;
+                        var User = await Api.GetDiscordUser();
+                        string avatarUrl = $"https://cdn.discordapp.com/avatars/{User.id}/{User.avatar}";
+
+                        <span>
+                            <a class="btn btn-fantasy btn-fantasy-md mt-4 mt-sm-0"
+                                 asp-controller="Authentication" asp-action="Logout">Logout</a>
+                            <img src=@avatarUrl class="avatar mx-2 d-none d-sm-inline" />
+                        </span>
+                    }
+
                 </div>
             </div>
         </nav>

@@ -1,0 +1,35 @@
+﻿@using Web_UI.Models.Discord;
+@model RedirectionData;
+@inject IDiscordAPIService Api;
+@{
+    var Servers = await Api.GetDiscordUserOwnerGuildsWithBot();
+}
+
+<div class="my-2">
+    <!--pe-3 makes sure, that this header will not collide with close button-->
+    <h5 class="pe-3">Change Server</h5>
+    @if(Servers.Count==0)
+    {
+        <p>
+            It looks like you don't own any server with bot :( <br/>
+            <a target="_blank" href="https://discord.com/oauth2/authorize?client_id=943693906082668625&permissions=8&scope=bot"
+            class="text-decoration-none text-warning"><strong>Click here</strong></a> to solve your problem
+        </p>
+    }
+    else
+    {        
+        @foreach (var Server in Servers)
+        {
+            string iconLink = string.IsNullOrEmpty(Server.icon) ? "../img/avatar-not-found.jpeg" :
+            $"https://cdn.discordapp.com/icons/{Server.id}/{Server.icon}";
+            <a class="py-2 px-2 w-100 d-flex align-items-center hover-fantasy text-decoration-none text-white" style="border-radius: 5px"
+           asp-controller="Database" asp-action="ChangeServer" asp-route-id="@Server.id"
+           asp-route-redirectAction="@Model.RedirectionAction" asp-route-redirectController="@Model.RedirectionController">
+                <img src="@iconLink" class="avatar me-3" />
+                @Server.name
+            </a>
+        }
+    }
+</div>
+
+

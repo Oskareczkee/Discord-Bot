@@ -280,6 +280,9 @@ namespace DB.Migrations
                     b.Property<int>("Endurance")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("GuildID")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("Intelligence")
                         .HasColumnType("int");
 
@@ -303,6 +306,9 @@ namespace DB.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<decimal?>("ServerGuildID")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("Strength")
                         .HasColumnType("int");
 
@@ -313,6 +319,8 @@ namespace DB.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ServerGuildID");
 
                     b.ToTable("Items");
                 });
@@ -344,6 +352,9 @@ namespace DB.Migrations
                     b.Property<int>("GoldAward")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("GuildID")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("HP")
                         .HasColumnType("int");
 
@@ -363,6 +374,9 @@ namespace DB.Migrations
                     b.Property<int>("Resistance")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("ServerGuildID")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("Strength")
                         .HasColumnType("int");
 
@@ -370,6 +384,8 @@ namespace DB.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ServerGuildID");
 
                     b.ToTable("Mobs");
                 });
@@ -400,7 +416,7 @@ namespace DB.Migrations
                     b.Property<double>("Gold")
                         .HasColumnType("float");
 
-                    b.Property<decimal>("GuildID")
+                    b.Property<decimal?>("GuildID")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("HP")
@@ -417,6 +433,9 @@ namespace DB.Migrations
 
                     b.Property<int>("NextLevel")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("ServerGuildID")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("Strength")
                         .HasColumnType("int");
@@ -441,7 +460,19 @@ namespace DB.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("ServerGuildID");
+
                     b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("DB.Models.Servers.Server", b =>
+                {
+                    b.Property<decimal>("GuildID")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("GuildID");
+
+                    b.ToTable("Servers");
                 });
 
             modelBuilder.Entity("DB.Models.Items.EquipmentItem", b =>
@@ -478,6 +509,33 @@ namespace DB.Migrations
                     b.HasIndex("ProfileID");
 
                     b.ToTable("ProfileShops");
+                });
+
+            modelBuilder.Entity("DB.Models.Items.ItemBase", b =>
+                {
+                    b.HasOne("DB.Models.Servers.Server", "Server")
+                        .WithMany("Items")
+                        .HasForeignKey("ServerGuildID");
+
+                    b.Navigation("Server");
+                });
+
+            modelBuilder.Entity("DB.Models.Mobs.Mob", b =>
+                {
+                    b.HasOne("DB.Models.Servers.Server", "Server")
+                        .WithMany("Mobs")
+                        .HasForeignKey("ServerGuildID");
+
+                    b.Navigation("Server");
+                });
+
+            modelBuilder.Entity("DB.Models.Profiles.Profile", b =>
+                {
+                    b.HasOne("DB.Models.Servers.Server", "Server")
+                        .WithMany("Profiles")
+                        .HasForeignKey("ServerGuildID");
+
+                    b.Navigation("Server");
                 });
 
             modelBuilder.Entity("DB.Models.Items.EquipmentItem", b =>
@@ -532,6 +590,15 @@ namespace DB.Migrations
                     b.Navigation("Items");
 
                     b.Navigation("ShopItems");
+                });
+
+            modelBuilder.Entity("DB.Models.Servers.Server", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("Mobs");
+
+                    b.Navigation("Profiles");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,12 +10,10 @@ namespace Bot.Commands
     public class BasicCommands : BaseCommandModule
     {
         [Command("ping")]
-        [RequireItem("Brak tatuażów Pawła")]
-        [Description("Paweł gdzie są tatuaże?")]
+        [Description("Checks bot connection ping")]
         public async Task Ping(CommandContext ctx)
         {
-            var Pawel = await ctx.Guild.GetMemberAsync(539867125704294400).ConfigureAwait(false);
-            await ctx.Channel.SendMessageAsync($"{Pawel.Mention}zamknij mordę pls").ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync($"Pong, my ping is {ctx.Client.Ping}").ConfigureAwait(false);
         }
 
         [Command("add")]
@@ -186,6 +184,32 @@ namespace Bot.Commands
             embed.AddField("Armor", "Not implemented yet");
 
             await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+        }
+
+        [Command("anti-vent")]
+        [Description("Digs your biggest secrets")]
+        public async Task AntiVent(CommandContext ctx)
+        {
+            var embed = new DiscordEmbedBuilder
+            {
+                Title = "Albion Online",
+                Color = DiscordColor.PhthaloBlue,
+                Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail
+                {
+                    Url = Bot.Configuration.mamonPhotoURL,
+                    Width = 128,
+                    Height = 128
+                }
+            };
+
+            for (int x = 0; x < 5; x++)
+                embed.AddField("Albion Online", "Albion Online to sandbox MMORPG, w którym to Ty piszesz własną historię, zamiast podążać wytyczoną ścieżką.");
+
+            for (int x = 0; x < 20; x++)
+            {
+                await ctx.Channel.SendMessageAsync(embed: embed).ConfigureAwait(false);
+                Thread.Sleep(2000);
+            }
         }
     }
 }

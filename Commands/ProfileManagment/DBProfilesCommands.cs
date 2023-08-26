@@ -13,15 +13,8 @@ namespace Bot.Commands.ProfileManagment
     {
         //the database
         private readonly IProfileService _profileService;
-        private readonly IItemService _itemService;
-        private readonly IExperienceService _expService;
 
-        public DBProfileCommands(IProfileService ProfileService, IExperienceService expService, IItemService itemService)
-        {
-            _profileService = ProfileService;
-            _expService = expService;
-            _itemService = itemService;
-        }
+        public DBProfileCommands(IProfileService ProfileService) => _profileService = ProfileService;
 
         [Command("profile"), AddXP(10)]
         [Description("Shows user profile")]
@@ -36,7 +29,7 @@ namespace Bot.Commands.ProfileManagment
         private async Task DisplayProfileAsync(CommandContext ctx, ulong memberID)
         {
 
-            Profile profile = await _profileService.GetProfileWithEquipmentStats(memberID, ctx.Guild.Id).ConfigureAwait(false);
+            Profile profile = await _profileService.GetProfileWithEquipmentStatsAsync(memberID, ctx.Guild.Id).ConfigureAwait(false);
 
             DiscordMember member = ctx.Guild.Members[profile.DiscordID];
 
@@ -48,7 +41,7 @@ namespace Bot.Commands.ProfileManagment
                 Color = DiscordColor.Aquamarine
             };
 
-            var eqStats = await _profileService.GetEquipmentStats(memberID, ctx.Guild.Id).ConfigureAwait(false);
+            var eqStats = await _profileService.GetEquipmentStatsAsync(memberID, ctx.Guild.Id).ConfigureAwait(false);
 
             profileEmbed.AddField("XP:", profile.XP.ToString(), true);
             profileEmbed.AddField("Level:", profile.Level.ToString(), true);
@@ -79,7 +72,7 @@ namespace Bot.Commands.ProfileManagment
         {
             int GoldAmount = BotMath.RandomNumberGenerator.Next(1, 10);
             await ctx.Channel.SendMessageAsync($"You little beggar! Fortunately people are kind and gave you {GoldAmount} gold");
-            await _profileService.AddGold(ctx.Member!.Id, ctx.Guild.Id, GoldAmount);
+            await _profileService.AddGoldAsync(ctx.Member!.Id, ctx.Guild.Id, GoldAmount);
         }
 
 

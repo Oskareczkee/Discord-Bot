@@ -3,12 +3,21 @@ using Bot.Commands.Combat;
 using Bot.Commands.Helpers;
 using Bot.Commands.Items;
 using Bot.Commands.ProfileManagment;
+using Core.Services.AI;
+using Core.Services.Combat;
+using Core.Services.Items;
+using Core.Services.Mobs;
+using Core.Services.Music;
+using Core.Services.Profiles;
+using Core.Services.Servers;
+using DB;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
+using DSharpPlus.Lavalink;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -25,19 +34,18 @@ namespace Bot
             public string MemeFolderRoot { get; set; } = string.Empty;
         }
 
-        public DiscordClient Client { get; private set; }// private set means we can set this Client only in this class
+        public DiscordClient Client { get; private set; } = null!;
         public CommandsNextExtension Commands { get; private set; }
         public InteractivityExtension Interactivity { get; private set; }
         public DiscordActivity Activity { get; private set; }
-
+        public LavalinkExtension Lavalink { get; private set; } = null!;
         //use it only when necessary or in attributes, othwerwise use constructor injection
         public static IServiceProvider Services { get; private set; } = null!;
 
         public static BotConfig Configuration { get; private set; } = null!;
 
-        public Bot(IServiceProvider services)
+        public Bot()
         {
-
             var json = string.Empty;
 
             using (var fs = File.OpenRead("config.json"))
@@ -51,7 +59,8 @@ namespace Bot
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                MinimumLogLevel = LogLevel.Debug
+                MinimumLogLevel = LogLevel.Debug,
+                Intents = DiscordIntents.AllUnprivileged
             };
 
             Configuration = new BotConfig
@@ -69,8 +78,27 @@ namespace Bot
                 StreamUrl = "https://www.youtube.com/watch?v=bzZ4G3z5TMY",
             };
 
+            //build services
+            Services = new ServiceCollection()
+                .AddDbContext<Context>(options =>
+                            {
+                                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Context;Trusted_Connection=True;MultipleActiveResultSets=true");
+                                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                            })
+            .AddScoped<IItemService, ItemService>()
+            .AddScoped<IProfileService, ProfileService>()
+            .AddScoped<IExperienceService, ExperienceService>()
+            .AddScoped<ICombatService, CombatService>()
+            .AddScoped<IMobService, MobService>()
+            .AddScoped<IItemShopService, ItemShopService>()
+            .AddScoped<IAIService, AIService>()
+            .AddScoped<IServerService, ServerService>()
+            .AddScoped<IConfiguration>(_ => new ConfigurationBuilder().AddJsonFile("appsettings.json").Build())
+            .AddSingleton(this)
+            .AddSingleton<MusicService>(_ => new MusicService(Client))
+            .BuildServiceProvider();
+
             Client = new DiscordClient(Config);
-            Client.Ready += OnClientReady;
             Client.UseInteractivity(new InteractivityConfiguration
             {
                 Timeout = TimeSpan.FromMinutes(2)
@@ -81,21 +109,23 @@ namespace Bot
                 StringPrefixes = new string[] { configJson.CommandPrefix },
                 EnableDms = false,
                 EnableMentionPrefix = true,
-                Services = services
+                Services = Services
             };
 
-            Services = services;
+            Lavalink = Client.UseLavalink();
 
             Commands = Client.UseCommandsNext(CommandsConfig);
             //command registration
             registerCommands();
 
-            Client.ConnectAsync(Activity);
+            //register events
+            Client.GuildCreated += Events.OnGuildCreated;
+            Client.GuildDeleted += Events.OnGuildDeleted;
         }
 
-        private Task OnClientReady(DiscordClient sender, ReadyEventArgs e)
+        public Task StartAsync()
         {
-            return Task.CompletedTask;
+            return Client.ConnectAsync(Activity);
         }
 
         //put all commands registers here
@@ -121,6 +151,9 @@ namespace Bot
 
             //ai commands
             Commands.RegisterCommands<AICommands>();
+
+            //music commands
+            Commands.RegisterCommands<MusicCommands>();
 #if DATABASE_CLEAR
             Commands.RegisterCommands<ClearDatabase>();
 #endif

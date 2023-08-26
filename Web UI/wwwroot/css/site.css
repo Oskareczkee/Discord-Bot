@@ -58,7 +58,7 @@ body {
 }
 
 .btn-fantasy-sm {
-    padding: 0px 10px 5px 0px;
+    padding: 3px 7.5px 3px 7.5px;
 }
 
 .btn-fantasy-md {
@@ -70,9 +70,29 @@ body {
     background-color: darkviolet;
 }
 
+.hover-fantasy{
+    transition: background-color ease-in-out .3s;
+}
+
+.hover-fantasy:hover {
+    background-color: rgba(148, 0, 211, 0.5);
+}
+
 tr.hide-table-padding td{
     padding: 0;
 }
+
+.form-select-bg-black-transparent {
+    color: white;
+    background-color: rgba(0,0,0,0.3);
+    border: none;
+}
+
+    .form-select-bg-black-transparent > option {
+        color: white;
+        background-color: chartreuse;
+        border: none;
+    }
 
 .list-group-bg-black-transparent .list-group-item{
     color: white;
@@ -112,3 +132,9 @@ tr.hide-table-padding td{
         border-left: 2px solid white;
         color: blueviolet;
     }
+
+.avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}

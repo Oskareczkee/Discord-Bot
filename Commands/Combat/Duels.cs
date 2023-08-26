@@ -33,14 +33,14 @@ namespace Bot.Commands.Combat
         {
             CombatProfileAndDamage output = new CombatProfileAndDamage();
 
-            Profile Profile = await _profileService.GetProfileWithEquipmentStats(discordID, guildID).ConfigureAwait(false);
+            Profile Profile = await _profileService.GetProfileWithEquipmentStatsAsync(discordID, guildID).ConfigureAwait(false);
 
             output.profile = Profile;
             output.DiscordID = discordID;
             output.GuildID = guildID;
             output.Name = Name;
 
-            output.modifiers = await _profileService.GetEquipmentModifiers(discordID, guildID).ConfigureAwait(false);
+            output.modifiers = await _profileService.GetEquipmentModifiersAsync(discordID, guildID).ConfigureAwait(false);
 
             Item weapon = Profile.Equipment[4];
 
@@ -105,7 +105,7 @@ namespace Bot.Commands.Combat
                     int XPAmount = BotMath.CalculateXPAmount(defender.profile.Level, attacker.profile.Luck, attacker.profile.Level);
                     await ctx.Channel.SendMessageAsync($"{attacker.Name} was awarded with {GoldAmount} gold and {XPAmount} experience points !");
 
-                    await _profileService.AddGold(attacker.DiscordID, attacker.GuildID, GoldAmount);
+                    await _profileService.AddGoldAsync(attacker.DiscordID, attacker.GuildID, GoldAmount);
                     await _expService.GrantXPAsync(attacker.DiscordID, attacker.GuildID, XPAmount);
                     break;
                 }

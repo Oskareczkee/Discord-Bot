@@ -1,17 +1,31 @@
-﻿@{
+﻿@using Web_UI.Models.Discord;
+@inject IDiscordAPIService Api;
+@{
     Layout = "_Layout";
-    string action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    string _action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    string _controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
     var Session = new DatabaseSession(Context.Session);
+    var Servers = await Api.GetDiscordUserOwnerGuilds();
 }
 <div class="row px-3">
     <div class="col-sm-2">
         <div class="list-group list-group-bg-black-transparent">
-            <a class="list-group-item @(action =="Items" ? "active": "")"
+            <a class="list-group-item @(_action =="Items" ? "active": "")"
                asp-action="Items">Items</a>
-            <a class="list-group-item @(action =="Mobs" ? "active": "")"
+            <a class="list-group-item @(_action =="Mobs" ? "active": "")"
                asp-action="Mobs">Mobs</a>
         </div>
         <div class="list-group list-group-bg-black-transparent mt-2 mb-2">
+
+            <a class="list-group-item"
+               onclick="new ModalWindow('@Url.Action("ChangeServerPartialView", "Database", new RedirectionData{
+                   RedirectionAction = _action,
+                   RedirectionController = _controller
+               })').open()">
+
+                Servers
+            </a>
             @RenderSection("Filters", required: true)
         </div>
     </div>

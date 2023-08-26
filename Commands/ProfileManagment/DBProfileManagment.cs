@@ -83,7 +83,7 @@ namespace Bot.Commands.ProfileManagment
                     return;
                 }
 
-                await _profileService.LevelUpSkill(profile.DiscordID, profile.GuildID, skillType, skillAmount, price);
+                await _profileService.LevelUpSkillAsync(profile.DiscordID, profile.GuildID ?? 0, skillType, skillAmount, price);
                 await ctx.Channel.SendMessageAsync("Skill has been succesfully levelled up").ConfigureAwait(false);
             }
 
@@ -172,7 +172,7 @@ namespace Bot.Commands.ProfileManagment
             if (!succeded)
                 return;
 
-            bool changed = await _itemService.EquipItemAsync(profile.DiscordID, profile.GuildID, availableItems[choice - 1]);
+            bool changed = await _profileService.EquipItemAsync(profile.DiscordID, profile.GuildID ?? 0, availableItems[choice - 1]);
 
             if (changed)
                 if (availableItems[choice - 1].Name.Equals("None", StringComparison.OrdinalIgnoreCase))
@@ -218,7 +218,7 @@ namespace Bot.Commands.ProfileManagment
             if (!succeded)
                 return;
 
-            bool changed = await _itemService.EquipItemAsync(profile.DiscordID, profile.GuildID, new EquipmentItem(profile.ID, itemType));
+            bool changed = await _profileService.EquipItemAsync(profile.DiscordID, profile.GuildID ?? 0, new EquipmentItem(profile.ID, itemType));
 
             if (changed)
                 await ctx.Channel.SendMessageAsync("Item has been succesfully unequipped").ConfigureAwait(false);
@@ -305,7 +305,7 @@ namespace Bot.Commands.ProfileManagment
                 return;
 
 
-            if (!await _itemService.UseConsumableAsync(ctx.Member.Id, ctx.Guild.Id, chosenItem, chosenSlot))
+            if (!await _profileService.UseConsumableAsync(ctx.Member.Id, ctx.Guild.Id, chosenItem, chosenSlot))
             {
                 await ctx.Channel.SendMessageAsync($"UseConsumableAsync: Item could not be consumed");
                 return;
